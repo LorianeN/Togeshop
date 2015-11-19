@@ -3,6 +3,7 @@ package com.example.loriane.togeshop;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -51,6 +52,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private static final String[] DUMMY_CREDENTIALS = new String[]{
             "foo@example.com:hello", "bar@example.com:world"
     };
+    private static final String EXTRA_MSG = "Roger" ;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -333,7 +335,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
-                finish();
+                Intent intent = new Intent(LoginActivity.this,
+                        ChoixListe.class);
+                intent.putExtra("nom",EXTRA_MSG);
+                startActivity(intent);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
