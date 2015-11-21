@@ -8,7 +8,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.ListFragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -23,7 +22,7 @@ import android.view.MenuItem;
 public class ChoixListe extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,OnFragmentInteractionListener {
 
-    BalladesFragsPagerAdapter balladesFragsPagerAdapter;
+    ListesFragsPagerAdapter listesFragsPagerAdapter;
     ViewPager mViewPager;
 
     Fragment[] principalFragment = new Fragment[1];
@@ -35,9 +34,9 @@ public class ChoixListe extends AppCompatActivity
         setContentView(R.layout.activity_choix_liste);
 
         // ViewPager and its adapters use support library fragments, so use getSupportFragmentManager.
-        balladesFragsPagerAdapter = new BalladesFragsPagerAdapter(getSupportFragmentManager());
+        listesFragsPagerAdapter = new ListesFragsPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(balladesFragsPagerAdapter);
+        mViewPager.setAdapter(listesFragsPagerAdapter);
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -64,15 +63,20 @@ public class ChoixListe extends AppCompatActivity
 
     @Override
     public void onFragmentInteraction(String msg) {
-        //TODO passer à l'activité suivante
+//        //TODO passer à l'activité suivante
+        Intent intent = new Intent(ChoixListe.this,
+                Detail_liste.class);
+        intent.putExtra("nom","maListe");
+        startActivity(intent);
+
     }
 
     public void onFragmentInteraction(Uri uri) {
     }
 
     // Since this is an object collection, use a FragmentStatePagerAdapter, and NOT a FragmentPagerAdapter.
-    public class BalladesFragsPagerAdapter extends FragmentStatePagerAdapter {
-        public BalladesFragsPagerAdapter(FragmentManager fm) {
+    public class ListesFragsPagerAdapter extends FragmentStatePagerAdapter {
+        public ListesFragsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 

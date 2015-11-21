@@ -1,6 +1,7 @@
 package com.example.loriane.togeshop;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,7 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import com.example.loriane.togeshop.dummy.ListesContent;
+import com.example.loriane.togeshop.dummy.ItemsContent;
 
 /**
  * A fragment representing a list of Items.
@@ -23,7 +24,7 @@ import com.example.loriane.togeshop.dummy.ListesContent;
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
  * interface.
  */
-public class ListeFragment extends Fragment implements AbsListView.OnItemClickListener {
+public class ItemsFragment extends Fragment implements AbsListView.OnItemClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -48,8 +49,8 @@ public class ListeFragment extends Fragment implements AbsListView.OnItemClickLi
     private ListAdapter mAdapter;
 
     // TODO: Rename and change types of parameters
-    public static ListeFragment newInstance(String param1, String param2) {
-        ListeFragment fragment = new ListeFragment();
+    public static ItemsFragment newInstance(String param1, String param2) {
+        ItemsFragment fragment = new ItemsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,7 +62,7 @@ public class ListeFragment extends Fragment implements AbsListView.OnItemClickLi
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ListeFragment() {
+    public ItemsFragment() {
     }
 
     @Override
@@ -74,14 +75,14 @@ public class ListeFragment extends Fragment implements AbsListView.OnItemClickLi
         }
 
         // TODO: Change Adapter to display your content
-        mAdapter = new ArrayAdapter<ListesContent.DummyItem>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, ListesContent.ITEMS);
+        mAdapter = new ArrayAdapter<ItemsContent.DummyItem>(getActivity(),
+                android.R.layout.simple_list_item_1, android.R.id.text1, ItemsContent.ITEMS);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_liste, container, false);
+        View view = inflater.inflate(R.layout.fragment_items, container, false);
 
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
@@ -115,8 +116,8 @@ public class ListeFragment extends Fragment implements AbsListView.OnItemClickLi
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            //parent.getChildAt(position).setBackgroundColor(Color.BLUE);
-            mListener.onFragmentInteraction(ListesContent.ITEMS.get(position).id);
+            parent.getChildAt(position).setBackgroundColor(Color.BLUE);
+            mListener.onFragmentInteraction(ItemsContent.ITEMS.get(position).id);
         }
     }
 
@@ -132,4 +133,5 @@ public class ListeFragment extends Fragment implements AbsListView.OnItemClickLi
             ((TextView) emptyView).setText(emptyText);
         }
     }
+
 }

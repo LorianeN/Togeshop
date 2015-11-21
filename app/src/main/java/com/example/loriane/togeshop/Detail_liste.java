@@ -1,8 +1,14 @@
 package com.example.loriane.togeshop;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,12 +20,28 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class Detail_liste extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,OnFragmentInteractionListener {
+
+    ItemsFragsPagerAdapter itemsFragsPagerAdapter;
+    ViewPager mViewPager;
+
+    Fragment[] itemsFragment = new Fragment[1];
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        itemsFragment[0] = ItemsFragment.newInstance("monnom","pouet");
+
         setContentView(R.layout.activity_detail_liste);
+
+        // ViewPager and its adapters use support library fragments, so use getSupportFragmentManager.
+        itemsFragsPagerAdapter = new ItemsFragsPagerAdapter(getSupportFragmentManager());
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setAdapter(itemsFragsPagerAdapter);
+
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -41,6 +63,39 @@ public class Detail_liste extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+
+
+    @Override
+    public void onFragmentInteraction(String msg) {
+
+    }
+
+    public void onFragmentInteraction(Uri uri) {
+    }
+
+
+    // Since this is an object collection, use a FragmentStatePagerAdapter, and NOT a FragmentPagerAdapter.
+    public class ItemsFragsPagerAdapter extends FragmentStatePagerAdapter {
+        public ItemsFragsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int i) {
+            return itemsFragment[0];
+        }
+
+        @Override
+        public int getCount() {
+            return itemsFragment.length;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return "OBJECT " + (position + 1);
+        }
+    }
+
 
     @Override
     public void onBackPressed() {
