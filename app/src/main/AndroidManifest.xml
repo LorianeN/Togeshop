@@ -38,15 +38,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.loriane.togeshop.LoginActivity" />
         </activity>
-        <activity
-            android:name=".Detail_Liste"
-            android:label="@string/title_activity_detail__liste"
-            android:parentActivityName=".ChoixListe"
-            android:theme="@style/AppTheme.NoActionBar" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.loriane.togeshop.ChoixListe" />
-        </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -60,11 +51,13 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".MapsActivity"
-            android:label="@string/title_activity_maps" >
+            android:name=".Detail_liste"
+            android:label="@string/title_activity_detail_liste"
+            android:parentActivityName=".ChoixListe"
+            android:theme="@style/AppTheme.NoActionBar" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.loriane.togeshop.Detail_Liste" />
+                android:value="com.example.loriane.togeshop.ChoixListe" />
         </activity>
     </application>
 

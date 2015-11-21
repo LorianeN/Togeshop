@@ -1,15 +1,8 @@
 package com.example.loriane.togeshop;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.ListFragment;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,26 +13,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class ChoixListe extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,OnFragmentInteractionListener {
-
-    BalladesFragsPagerAdapter balladesFragsPagerAdapter;
-    ViewPager mViewPager;
-
-    Fragment[] principalFragment = new Fragment[1];
+public class Detail_liste extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       principalFragment[0] = ListeFragment.newInstance("monnom","pouet");
-        setContentView(R.layout.activity_choix_liste);
-
-        // ViewPager and its adapters use support library fragments, so use getSupportFragmentManager.
-        balladesFragsPagerAdapter = new BalladesFragsPagerAdapter(getSupportFragmentManager());
-        mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(balladesFragsPagerAdapter);
-
-
+        setContentView(R.layout.activity_detail_liste);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -63,38 +43,6 @@ public class ChoixListe extends AppCompatActivity
     }
 
     @Override
-    public void onFragmentInteraction(String msg) {
-        //TODO passer à l'activité suivante
-    }
-
-    public void onFragmentInteraction(Uri uri) {
-    }
-
-    // Since this is an object collection, use a FragmentStatePagerAdapter, and NOT a FragmentPagerAdapter.
-    public class BalladesFragsPagerAdapter extends FragmentStatePagerAdapter {
-        public BalladesFragsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int i) {
-            return principalFragment[0];
-        }
-
-        @Override
-        public int getCount() {
-            return principalFragment.length;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return "OBJECT " + (position + 1);
-        }
-    }
-
-
-
-    @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -107,7 +55,7 @@ public class ChoixListe extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.choix_liste, menu);
+        getMenuInflater().inflate(R.menu.detail_liste, menu);
         return true;
     }
 
@@ -149,9 +97,5 @@ public class ChoixListe extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    public void detail(View view) {
-//
     }
 }
