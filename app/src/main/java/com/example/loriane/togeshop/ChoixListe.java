@@ -2,6 +2,7 @@ package com.example.loriane.togeshop;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -19,6 +20,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.loriane.togeshop.dummy.ListesContent;
+
 public class ChoixListe extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,OnFragmentInteractionListener {
 
@@ -30,9 +33,9 @@ public class ChoixListe extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle(getIntent().getStringExtra("nom"));
        principalFragment[0] = ListeFragment.newInstance("monnom","pouet");
         setContentView(R.layout.activity_choix_liste);
-
         // ViewPager and its adapters use support library fragments, so use getSupportFragmentManager.
         listesFragsPagerAdapter = new ListesFragsPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -157,5 +160,28 @@ public class ChoixListe extends AppCompatActivity
 
     public void detail(View view) {
 //
+    }
+
+    /**
+     * Represents an asynchronous login/registration task used to authenticate
+     * the user.
+     */
+
+    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+
+        }
+
+        @Override
+        protected void onCancelled() {
+
+        }
     }
 }
