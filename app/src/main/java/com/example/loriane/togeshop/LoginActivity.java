@@ -20,6 +20,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -67,6 +68,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.d("SONPERE","je lance l'appli");
         setContentView(R.layout.activity_login);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -146,6 +149,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
+        Log.d("SONPERE", "je tente de me login");
         if (mAuthTask != null) {
             return;
         }
@@ -199,7 +203,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 4;
+        return password.length() > 2;
     }
 
     /**
@@ -310,6 +314,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
+            Log.d("SONPERE", "j'ai le nom et le mdp, on tente la connection et tout et tout");
             Client roger = Client.getClient();
                 return roger.login(mEmail,mPassword);
 //
@@ -331,6 +336,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
+                Log.d("SONPERE", "la connection à marché !!");
                 Intent intent = new Intent(LoginActivity.this,
                         ChoixListe.class);
                 intent.putExtra("nom",mEmail);

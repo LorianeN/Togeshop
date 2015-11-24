@@ -54,7 +54,7 @@ public class ItemsFragment extends Fragment implements AbsListView.OnItemClickLi
      * The Adapter which will be used to populate the ListView/GridView with
      * Views.
      */
-    private ListAdapter mAdapter;
+    private ArrayAdapter ItemAdapter;
 
     // TODO: Rename and change types of parameters
     public static ItemsFragment newInstance(String param1, String param2) {
@@ -71,16 +71,22 @@ public class ItemsFragment extends Fragment implements AbsListView.OnItemClickLi
      * fragment (e.g. upon screen orientation changes).
      */
     public ItemsFragment() {
+        new GetItemsTask().execute();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new GetItemsTask().execute();
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
+        // TODO: Change Adapter to display your content
+        ItemAdapter = new ArrayAdapter<ItemsContent.DummyItem>(getActivity(),
+                android.R.layout.simple_list_item_1, android.R.id.text1, ItemsContent.ITEMS);
 
 
     }
@@ -90,16 +96,15 @@ public class ItemsFragment extends Fragment implements AbsListView.OnItemClickLi
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_items, container, false);
 
-        // TODO: Change Adapter to display your content
-        mAdapter = new ArrayAdapter<ItemsContent.DummyItem>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, ItemsContent.ITEMS);
 
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
-        ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
+        ((AdapterView<ListAdapter>) mListView).setAdapter(ItemAdapter);
 
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
+
+        //ItemAdapter.notifyDataSetChanged();
 
         return view;
     }
@@ -163,9 +168,14 @@ public class ItemsFragment extends Fragment implements AbsListView.OnItemClickLi
         protected void onPostExecute(final Boolean success) {
 
             for (int i =0;i<jean.size();i++){
+                ItemsContent.ITEM_MAP.clear();
+                ItemsContent.ITEMS.clear();
                 Log.d("SONPERE", "j'ai reçu " + jean.get(i).getNom());
-                ListesContent.addItem(new ListesContent.DummyItem(jean.get(i).getIdItem(), jean.get(i).getNom()));
+                ItemsContent.addItem(new ItemsContent.DummyItem(jean.get(i).getIdItem(), jean.get(i).getNom()));
             }
+
+
+            //mAdapter.notifyDataSetChanged();
         }
 
         @Override

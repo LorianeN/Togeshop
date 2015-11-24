@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -33,9 +34,12 @@ public class ChoixListe extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("SONPERE", "j'ai mon monsieur connecté, je charge des trucs");
         setTitle(getIntent().getStringExtra("nom"));
        principalFragment[0] = ListeFragment.newInstance("monnom","pouet");
+        Log.d("SONPERE", "j'ai créé le fragment");
         setContentView(R.layout.activity_choix_liste);
+        Log.d("SONPERE", "j'ai mis la view en place");
         // ViewPager and its adapters use support library fragments, so use getSupportFragmentManager.
         listesFragsPagerAdapter = new ListesFragsPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -104,6 +108,7 @@ public class ChoixListe extends AppCompatActivity
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        Client.getClient().disconnect(Client.getClient().getUserName());
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -162,26 +167,4 @@ public class ChoixListe extends AppCompatActivity
 //
     }
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-
-        }
-
-        @Override
-        protected void onCancelled() {
-
-        }
-    }
 }

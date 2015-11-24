@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -31,11 +32,12 @@ public class Detail_liste extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("SONPERE", "j'ai créé mon activité detail_liste");
         setTitle(getIntent().getStringExtra("nom"));
         itemsFragment[0] = ItemsFragment.newInstance("monnom","pouet");
-
+        Log.d("SONPERE", "j'ai mon fragment item");
         setContentView(R.layout.activity_detail_liste);
-
+        Log.d("SONPERE", "j'ai mis la view en place");
         // ViewPager and its adapters use support library fragments, so use getSupportFragmentManager.
         itemsFragsPagerAdapter = new ItemsFragsPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.pager);
