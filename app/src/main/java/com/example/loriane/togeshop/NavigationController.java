@@ -1,5 +1,7 @@
 package com.example.loriane.togeshop;
 
+import android.util.Log;
+
 import com.example.loriane.togeshop.Client;
 import com.example.loriane.togeshop.ItemCourse;
 import com.example.loriane.togeshop.ListeCourse;
@@ -133,6 +135,7 @@ public class NavigationController{
         try {
             contenu = new JSONArray(Client.getClient().getSelectItem(id));
             for (int i = 0;i<contenu.length();i++){
+                Log.d("SONPERE","après demande au serveur, j'ai reçu : "+contenu.getJSONObject(i).getString("nom"));
                 ItemCourse tmp = new ItemCourse();
                 tmp.setPrix(contenu.getJSONObject(i).getString("prix"));
                 tmp.setTaken(contenu.getJSONObject(i).getBoolean("taken"));
