@@ -12,12 +12,14 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.example.loriane.togeshop.dummy.ListesContent;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -52,7 +54,7 @@ public class ListeFragment extends Fragment implements AbsListView.OnItemClickLi
      * The Adapter which will be used to populate the ListView/GridView with
      * Views.
      */
-    private ListAdapter mAdapter;
+    private ArrayAdapter mAdapter;
 
     // TODO: Rename and change types of parameters
     public static ListeFragment newInstance(String param1, String param2) {
@@ -69,17 +71,23 @@ public class ListeFragment extends Fragment implements AbsListView.OnItemClickLi
      * fragment (e.g. upon screen orientation changes).
      */
     public ListeFragment() {
+        new GetListTask().execute();
+    }
+
+    public  BaseAdapter getMAdapter() {
+        return mAdapter;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new GetListTask().execute();
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
+        // TODO: Change Adapter to display your content
+        mAdapter = new ArrayAdapter<ListesContent.DummyItem>(getActivity(),
+                android.R.layout.simple_list_item_1, android.R.id.text1, ListesContent.ITEMS);
 
 
     }
@@ -89,9 +97,7 @@ public class ListeFragment extends Fragment implements AbsListView.OnItemClickLi
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_liste, container, false);
 
-        // TODO: Change Adapter to display your content
-        mAdapter = new ArrayAdapter<ListesContent.DummyItem>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, ListesContent.ITEMS);
+
         
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
@@ -99,7 +105,6 @@ public class ListeFragment extends Fragment implements AbsListView.OnItemClickLi
 
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
-
         return view;
     }
 
@@ -146,8 +151,6 @@ public class ListeFragment extends Fragment implements AbsListView.OnItemClickLi
     }
 
     public class GetListTask extends AsyncTask<Void, Void, Boolean> {
-
-
         GetListTask() {
         }
 
@@ -161,7 +164,8 @@ public class ListeFragment extends Fragment implements AbsListView.OnItemClickLi
 
         @Override
         protected void onPostExecute(final Boolean success) {
-
+            ListesContent.ITEMS.clear();
+            ListesContent.ITEM_MAP.clear();
             for (int i =0;i<jean.size();i++){
                 Log.d("SONPERE", "j'ai reçu "+ jean.get(i).getNom());
                 ListesContent.addItem(new ListesContent.DummyItem(jean.get(i).getIdListe(), jean.get(i).getNom()));
