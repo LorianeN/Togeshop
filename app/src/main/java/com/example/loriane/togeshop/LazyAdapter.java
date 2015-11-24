@@ -35,9 +35,10 @@ public class LazyAdapter extends BaseAdapter {
     Drawable d;
 
     public LazyAdapter(Activity a, ArrayList<HashMap<String, String>> d) {
+        Log.d("SONPERE", "j'ai créé mon adapter");
         activity = a;
         data=d;
-
+        Log.d("SONPERE", "il a reçu "+data.size()+" items");
         inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         imageLoader=new ImageLoader(activity.getApplicationContext());
     }
@@ -57,26 +58,40 @@ public class LazyAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         Log.d("SONPERE", "je devrais passer par là");
         View vi=convertView;
-        if(convertView==null)
+        if(convertView==null) {
             vi = inflater.inflate(R.layout.items_cell_content, null);
-        TextView title = (TextView)vi.findViewById(R.id.titre); // title
-        TextView description = (TextView)vi.findViewById(R.id.description); // artist name
-        ImageView thumb_image=(ImageView)vi.findViewById(R.id.img); // thumb image
-        Log.d("SONPERE","position :"+ position);
-        Log.d("SONPERE","je traite l'item "+data.get(position).get("titre"));
+            TextView title = (TextView) vi.findViewById(R.id.titre); // title
+            TextView description = (TextView) vi.findViewById(R.id.description); // artist name
+            ImageView thumb_image = (ImageView) vi.findViewById(R.id.img); // thumb image
+            Log.d("SONPERE", "position :" + position);
+            Log.d("SONPERE", "je traite l'item " + data.get(position).get("titre"));
 //        HashMap<String, String> song = new HashMap<String, String>();
 //        song = data.get(position);
 
-        // Setting all values in listview
-        title.setText(data.get(position).get("titre"));
-        description.setText("description");
-        new GetImageTask().execute(data.get(position).get("url"));
-        Log.d("SONPERE", "je commence à attendre");
-        while(!waiting){}
-        Log.d("SONPERE", "j'ai fini d'attendre !!");
-        waiting =false;
-        thumb_image.setImageDrawable(d);
-        //imageLoader.DisplayImage(data.get(position).get("url"), thumb_image);
+            // Setting all values in listview
+            title.setText(data.get(position).get("titre"));
+            description.setText("description");
+            new GetImageTask().execute(data.get(position).get("url"));
+            Log.d("SONPERE", "je commence à attendre");
+            long cpt=0;
+            while (!waiting&cpt<60000000) {
+                cpt++;
+            }
+            if (cpt==60000000){
+                Log.d("SONPERE","timeout :/");
+                thumb_image.setImageResource(R.drawable.no_image);
+            }
+            else{
+                Log.d("SONPERE", "j'ai fini d'attendre !!");
+
+                thumb_image.setImageDrawable(d);
+                //imageLoader.DisplayImage(data.get(position).get("url"), thumb_image);
+            }
+            if(position!=getCount()-1) {
+                waiting = false;
+            }
+
+        }
         return vi;
     }
 
@@ -89,6 +104,7 @@ public class LazyAdapter extends BaseAdapter {
                 Log.d("SONPERE", "je traite l'url "+params[0]);
                 URL url = new URL(params[0]);
                 InputStream content = (InputStream)url.getContent();
+                Log.d("SONPERE","je créé donc le drawable");
                 d = Drawable.createFromStream(content, "src");
             } catch (IOException e) {
                 waiting = true;

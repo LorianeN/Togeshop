@@ -94,10 +94,13 @@ public class ItemsFragment extends Fragment implements AbsListView.OnItemClickLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        listItem.clear();
+        Log.d("SONPERE", "suis passé par le constructeur une fois");
+        //listItem.clear();
         // TODO: Change Adapter to display your content
         mAdapter = new ArrayAdapter<ItemsContent.DummyItem>(getActivity(),
                 android.R.layout.simple_list_item_1, android.R.id.text1, ItemsContent.ITEMS);
+        // TODO: Change Adapter to display your content
+        ItemAdapter = new LazyAdapter(pouet, listItem);
     }
 
     @Override
@@ -105,11 +108,10 @@ public class ItemsFragment extends Fragment implements AbsListView.OnItemClickLi
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_items, container, false);
 
+
         Log.d("SONPERE", "je créé la view de mon fragment list detail_liste");
-        // TODO: Change Adapter to display your content
-        ItemAdapter = new LazyAdapter(pouet, listItem);
         mListView = (ListView) view.findViewById(R.id.liste_items);
-        mListView.setAdapter(mAdapter);
+        mListView.setAdapter(ItemAdapter);
         Log.d("SONPERE","c'est fait (view Fragment item)!");
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
@@ -190,7 +192,6 @@ public class ItemsFragment extends Fragment implements AbsListView.OnItemClickLi
 
         @Override
         protected void onPostExecute(final Boolean success) {
-
         }
 
         @Override
