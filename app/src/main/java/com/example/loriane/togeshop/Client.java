@@ -34,6 +34,7 @@ public class Client {
     DataInputStream curIn ;
     DataOutputStream curOut ;
 
+
     public String getUserName() {
         return userName;
     }
@@ -45,6 +46,21 @@ public class Client {
     String userName;
     private ListeCourse listeCourse;
     boolean connected = false ;
+
+
+    int idCurrentList=1;
+    String nameCurrentList ="";
+
+
+    public int getIdCurrentList() {
+        return idCurrentList;
+    }
+
+    public void setIdCurrentList(int idCurrentList) {
+        this.idCurrentList = idCurrentList;
+    }
+
+
 
 
     public static Client getClient () { // récup de la référence unique
@@ -66,7 +82,7 @@ public class Client {
     boolean connect(String nickName) {
         try {
             Log.d("SONPERE", "J'essaie de me connecter");
-            sock = new Socket("192.168.1.21", 10000);
+            sock = new Socket("192.168.2.5", 10000);
             curIn = new DataInputStream(sock.getInputStream());
             curOut = new DataOutputStream(sock.getOutputStream());
             System.out.println("j'écris mon nom via "+sock.toString());
@@ -339,5 +355,13 @@ public class Client {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setNameCurrentList(String nameCurrentList) {
+        this.nameCurrentList = nameCurrentList;
+    }
+
+    public String getNameCurrentList(){
+        return nameCurrentList;
     }
 }

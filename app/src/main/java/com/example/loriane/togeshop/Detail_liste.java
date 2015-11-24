@@ -31,6 +31,7 @@ public class Detail_liste extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle(getIntent().getStringExtra("nom"));
         itemsFragment[0] = ItemsFragment.newInstance("monnom","pouet");
 
         setContentView(R.layout.activity_detail_liste);

@@ -69,7 +69,7 @@ public class ChoixListe extends AppCompatActivity
 //        //TODO passer à l'activité suivante
         Intent intent = new Intent(ChoixListe.this,
                 Detail_liste.class);
-        intent.putExtra("nom","maListe");
+        intent.putExtra("nom",Client.getClient().getNameCurrentList());
         startActivity(intent);
 
     }

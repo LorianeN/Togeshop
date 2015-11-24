@@ -2,8 +2,10 @@ package com.example.loriane.togeshop;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,9 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.example.loriane.togeshop.dummy.ItemsContent;
+import com.example.loriane.togeshop.dummy.ListesContent;
+
+import java.util.ArrayList;
 
 /**
  * A fragment representing a list of Items.
@@ -30,6 +35,9 @@ public class ItemsFragment extends Fragment implements AbsListView.OnItemClickLi
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    ArrayList<ItemCourse> jean = new ArrayList<>();
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -68,21 +76,23 @@ public class ItemsFragment extends Fragment implements AbsListView.OnItemClickLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        new GetItemsTask().execute();
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        // TODO: Change Adapter to display your content
-        mAdapter = new ArrayAdapter<ItemsContent.DummyItem>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, ItemsContent.ITEMS);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_items, container, false);
+
+        // TODO: Change Adapter to display your content
+        mAdapter = new ArrayAdapter<ItemsContent.DummyItem>(getActivity(),
+                android.R.layout.simple_list_item_1, android.R.id.text1, ItemsContent.ITEMS);
 
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
@@ -117,7 +127,7 @@ public class ItemsFragment extends Fragment implements AbsListView.OnItemClickLi
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
             parent.getChildAt(position).setBackgroundColor(Color.BLUE);
-            mListener.onFragmentInteraction(ItemsContent.ITEMS.get(position).id);
+            mListener.onFragmentInteraction(String.valueOf(ItemsContent.ITEMS.get(position).id));
         }
     }
 
@@ -131,6 +141,35 @@ public class ItemsFragment extends Fragment implements AbsListView.OnItemClickLi
 
         if (emptyView instanceof TextView) {
             ((TextView) emptyView).setText(emptyText);
+        }
+    }
+
+
+    public class GetItemsTask extends AsyncTask<Void, Void, Boolean> {
+
+
+        GetItemsTask() {
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            NavigationController roger = new NavigationController();
+            Client jonas = Client.getClient();
+            jean = roger.getselectItem(jonas.getIdCurrentList());
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+
+            for (int i =0;i<jean.size();i++){
+                Log.d("SONPERE", "j'ai reçu " + jean.get(i).getNom());
+                ListesContent.addItem(new ListesContent.DummyItem(jean.get(i).getIdItem(), jean.get(i).getNom()));
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
         }
     }
 
