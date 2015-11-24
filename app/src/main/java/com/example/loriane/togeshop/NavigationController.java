@@ -15,19 +15,6 @@ import java.util.ArrayList;
  */
 public class NavigationController{
 
-    int idCurrentList=1;
-
-
-
-    public int getIdCurrentList() {
-        return idCurrentList;
-    }
-
-    public void setIdCurrentList(int idCurrentList) {
-        this.idCurrentList = idCurrentList;
-    }
-
-
     public NavigationController() {
     }
 
@@ -133,7 +120,7 @@ public class NavigationController{
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            String requete = "addItem/"+idCurrentList+"/"+tmp.toString();
+            String requete = "addItem/"+Client.getClient().getIdCurrentList()+"/"+tmp.toString();
             System.out.println("j'écris : "+requete);
             Client.getClient().addItem(requete);
         }
@@ -173,10 +160,10 @@ public class NavigationController{
     public boolean itemUpdated(boolean disable, int selectedItemId) {
         String requete;
         if (disable) {
-            requete = "disableItem/" +idCurrentList + "/" + selectedItemId;
+            requete = "disableItem/" +Client.getClient().getIdCurrentList() + "/" + selectedItemId;
             return Client.getClient().sendRequest(requete);
         } else {
-            requete = "enableItem/" + idCurrentList + "/" + selectedItemId;
+            requete = "enableItem/" +Client.getClient().getIdCurrentList()+ "/" + selectedItemId;
             return Client.getClient().sendRequest(requete);
         }
     }

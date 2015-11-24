@@ -126,6 +126,8 @@ public class ListeFragment extends Fragment implements AbsListView.OnItemClickLi
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
             //parent.getChildAt(position).setBackgroundColor(Color.BLUE);
+            Client.getClient().setIdCurrentList(ListesContent.ITEMS.get(position).id);
+            Client.getClient().setNameCurrentList(ListesContent.ITEMS.get(position).content);
             mListener.onFragmentInteraction(String.valueOf(ListesContent.ITEMS.get(position).id));
         }
     }
