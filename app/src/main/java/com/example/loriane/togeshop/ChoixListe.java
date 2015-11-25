@@ -3,7 +3,10 @@ package com.example.loriane.togeshop;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -16,6 +19,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -25,8 +29,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Filter;
+import android.widget.Filterable;
+import android.widget.TextView;
 
 import com.example.loriane.togeshop.dummy.ListesContent;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChoixListe extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,OnFragmentInteractionListener {
@@ -44,7 +58,7 @@ public class ChoixListe extends AppCompatActivity
         Log.d("SONPERE", "j'ai mon monsieur connecté, je charge des trucs");
         setTitle(getIntent().getStringExtra("nom"));
         principalFragment[0] = ListeFragment.newInstance(this);
-        principalFragment[1] = NewListFragment.newInstance("pouet","pouet");
+        principalFragment[1] = NewListFragment.newInstance();
         Log.d("SONPERE", "j'ai créé le fragment");
         while(!loadingFinished){
             Log.d("SAMERE","j'attend");
@@ -208,7 +222,7 @@ public class ChoixListe extends AppCompatActivity
         if (id == R.id.nav_camara) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
-            mViewPager.setCurrentItem(1);
+
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
@@ -229,4 +243,92 @@ public class ChoixListe extends AppCompatActivity
         newFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
+    public void showNewListFragment(){
+        mViewPager.setCurrentItem(1);
+        AutoCompleteTextView editTextAddress = (AutoCompleteTextView) findViewById(R.id.adresse);
+        editTextAddress.setAdapter(new AutoCompleteAdapter(this));
+    }
+
+    // And the corresponding Adapter
+    private class AutoCompleteAdapter extends ArrayAdapter<Address> implements Filterable {
+
+        private LayoutInflater mInflater;
+        private Geocoder mGeocoder;
+        private StringBuilder mSb = new StringBuilder();
+
+        public AutoCompleteAdapter(final Context context) {
+            super(context, -1);
+            mInflater = LayoutInflater.from(context);
+            mGeocoder = new Geocoder(context);
+        }
+
+        @Override
+        public View getView(final int position, final View convertView, final ViewGroup parent) {
+            final TextView tv;
+            if (convertView != null) {
+                tv = (TextView) convertView;
+            } else {
+                tv = (TextView) mInflater.inflate(android.R.layout.simple_dropdown_item_1line, parent, false);
+            }
+
+            tv.setText(createFormattedAddressFromAddress(getItem(position)));
+            return tv;
+        }
+
+        private String createFormattedAddressFromAddress(final Address address) {
+            mSb.setLength(0);
+            final int addressLineSize = address.getMaxAddressLineIndex();
+            for (int i = 0; i < addressLineSize; i++) {
+                mSb.append(address.getAddressLine(i));
+                if (i != addressLineSize - 1) {
+                    mSb.append(", ");
+                }
+            }
+            return mSb.toString();
+        }
+
+        @Override
+        public Filter getFilter() {
+            return new Filter() {
+                @Override
+                protected FilterResults performFiltering(final CharSequence constraint) {
+                    List<Address> addressList = null;
+                    if (constraint != null) {
+                        try {
+                            addressList = mGeocoder.getFromLocationName((String) constraint, 5);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if (addressList == null) {
+                        addressList = new ArrayList<>();
+                    }
+
+                    final FilterResults filterResults = new FilterResults();
+                    filterResults.values = addressList;
+                    filterResults.count = addressList.size();
+
+                    return filterResults;
+                }
+
+                @Override
+                protected void publishResults(final CharSequence contraint, final FilterResults results) {
+                    clear();
+                    for (Address address : (List<Address>) results.values) {
+                        add(address);
+                    }
+                    if (results.count > 0) {
+                        notifyDataSetChanged();
+                    } else {
+                        notifyDataSetInvalidated();
+                    }
+                }
+
+                @Override
+                public CharSequence convertResultToString(final Object resultValue) {
+                    return resultValue == null ? "" : ((Address) resultValue).getAddressLine(0);
+                }
+            };
+        }
+    }
 }
