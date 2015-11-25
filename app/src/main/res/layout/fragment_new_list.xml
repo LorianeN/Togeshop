@@ -1,0 +1,86 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.loriane.togeshop.NewListFragment">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ajout d'une nouvelle Liste"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="@color/colorAccent"
+            android:textSize="24dp"/>
+
+        <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <AutoCompleteTextView android:id="@+id/nomListe" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:hint="Nom de la liste"
+                android:inputType="text" android:maxLines="1"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/tf_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="DATE"
+            android:textColor="#FFFFFF"
+            android:background="@color/colorPrimary"
+            android:onClick="showDatePickerDialog"/>
+
+        <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <AutoCompleteTextView android:id="@+id/adresse" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:hint="Adresse de l'événement"
+                android:inputType="textPostalAddress" android:maxLines="1"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText android:id="@+id/descriptionListe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Description de l'événement"
+                android:inputType="textMultiLine"
+                android:maxLines="10"
+                android:lines="8"
+                android:minLines="6"
+                android:gravity="top|left"
+                android:scrollbars="vertical"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Retour"
+                android:textColor="#FFFFFF"
+                android:background="@color/colorPrimary"
+                android:onClick="validateNewList"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="valider"
+                android:textColor="#FFFFFF"
+                android:background="@color/colorPrimary"
+                android:onClick="cancel"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</FrameLayout>
