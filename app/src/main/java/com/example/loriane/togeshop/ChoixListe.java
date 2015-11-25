@@ -33,7 +33,7 @@ public class ChoixListe extends AppCompatActivity
     ListesFragsPagerAdapter listesFragsPagerAdapter;
     ViewPager mViewPager;
 
-    Fragment[] principalFragment = new Fragment[1];
+    Fragment[] principalFragment = new Fragment[2];
     private View mProgressView;
     private View mLoginFormView;
     boolean loadingFinished =false;
@@ -43,13 +43,14 @@ public class ChoixListe extends AppCompatActivity
         Log.d("SONPERE", "j'ai mon monsieur connecté, je charge des trucs");
         setTitle(getIntent().getStringExtra("nom"));
        principalFragment[0] = ListeFragment.newInstance(this);
+        principalFragment[1] = PlusOneFragment.newInstance("pouet","pouet");
         Log.d("SONPERE", "j'ai créé le fragment");
         while(!loadingFinished){
             Log.d("SAMERE","j'attend");
         }
         setContentView(R.layout.activity_choix_liste);
         Log.d("SONPERE", "j'ai mis la view en place");
-        // ViewPager and its adapters use support library fragments, so use getSupportFragmentManager.
+//        // ViewPager and its adapters use support library fragments, so use getSupportFragmentManager.
         listesFragsPagerAdapter = new ListesFragsPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.choix_liste_pager);
         mViewPager.setAdapter(listesFragsPagerAdapter);
@@ -148,7 +149,7 @@ public class ChoixListe extends AppCompatActivity
 
         @Override
         public Fragment getItem(int i) {
-            return principalFragment[0];
+            return principalFragment[i];
         }
 
         @Override
@@ -206,7 +207,7 @@ public class ChoixListe extends AppCompatActivity
         if (id == R.id.nav_camara) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
-
+            mViewPager.setCurrentItem(1);
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
