@@ -23,16 +23,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
 
 public class Detail_liste extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,OnFragmentInteractionListener {
 
     ItemsFragsPagerAdapter itemsFragsPagerAdapter;
     ViewPager mViewPager;
-
+    public ProgressBar spinner;
     Fragment[] itemsFragment = new Fragment[1];
-    private View mProgressView;
-    private View mLoginFormView;
     boolean loadingFinished =false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,23 +41,18 @@ public class Detail_liste extends AppCompatActivity
         itemsFragment[0] = ItemsFragment.newInstance(this);
         Log.d("SONPERE", "j'ai mon fragment item");
         setContentView(R.layout.activity_detail_liste);
-
+        spinner = (ProgressBar)findViewById(R.id.progressBar1);
         Log.d("SONPERE", "j'ai mis la view en place");
         // ViewPager and its adapters use support library fragments, so use getSupportFragmentManager.
         itemsFragsPagerAdapter = new ItemsFragsPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.detail_liste_pager);
-        Log.d("SONPERE", "je set l'adapter de l'activité detail");
-        while(!loadingFinished){
-            Log.d("SAMERE","j'attend");
-        }
+        Log.d("SONPERE", "show Progress true");
+        spinner.setVisibility(View.VISIBLE);
+//        while(!loadingFinished){
+//            Log.d("SAMERE","j'attend");
+//        }
         mViewPager.setAdapter(itemsFragsPagerAdapter);
         Log.d("SONPERE","J'ai fini de set l'adapter de l'activité détail");
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.detail_form);
-
-
-
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -78,12 +72,14 @@ public class Detail_liste extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Log.d("SONPERE", "trop tard");
         navigationView.setNavigationItemSelectedListener(this);
     }
 
 
     @Override
     public void onFragmentInteraction(String msg) {
+        //Log.d("SONPERE", "j'ai appuyé sur l'item "+ msg);
 
     }
 
@@ -100,44 +96,6 @@ public class Detail_liste extends AppCompatActivity
     public void setLoadingFinished(boolean loadingFinished) {
         this.loadingFinished = loadingFinished;
     }
-
-
-    /**
-     * Shows the progress UI and hides the login form.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
-
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
-    }
-
 
     // Since this is an object collection, use a FragmentStatePagerAdapter, and NOT a FragmentPagerAdapter.
     public class ItemsFragsPagerAdapter extends FragmentStatePagerAdapter {
