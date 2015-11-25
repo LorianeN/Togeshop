@@ -75,26 +75,28 @@ public class LazyAdapter extends BaseAdapter {
             viewHolder = (ViewHolderItem) convertView.getTag();
         }
         final  ItemCourse Item = data.get(position);
-        GetImageTask roger = new GetImageTask(Item.getURL(),viewHolder);
-        roger.execute();
-        Log.d("SONPERE", "je commence à attendre");
-        long cpt=0;
-        while (!waiting&cpt<60000000) {
-            cpt++;
-        }
-        if (cpt==60000000){
-            Log.d("SONPERE","timeout :/");
-            viewHolder.ImageViewitem.setImageResource(R.drawable.no_image);
-        }
-        else{
-            Log.d("SONPERE", "j'ai fini d'attendre !!");
-            //imageLoader.DisplayImage(data.get(position).get("url"), thumb_image);
-        }
+//        GetImageTask roger = new GetImageTask(Item.getURL(),viewHolder);
+//        roger.execute();
+//        Log.d("SONPERE", "je commence à attendre");
+//        long cpt=0;
+//        while (!waiting&cpt<60000000) {
+//            cpt++;
+//        }
+//        if (cpt==60000000){
+//            Log.d("SONPERE","timeout :/");
+//            viewHolder.ImageViewitem.setImageResource(R.drawable.no_image);
+//        }
+//        else{
+//            Log.d("SONPERE", "j'ai fini d'attendre !!");
+//            //imageLoader.DisplayImage(data.get(position).get("url"), thumb_image);
+//        }
+
         Log.d("SONPERE", "position :" + position);
         Log.d("SONPERE", "je traite l'item " + Item.getNom());
         // Setting all values in listview
         viewHolder.titleitem.setText(Item.getNom());
         viewHolder.descriptionitem.setText("description");
+        viewHolder.ImageViewitem.setImageBitmap(Item.getImageitem());
        // imageLoader.DisplayImage(Item.get("url"), viewHolder.ImageViewitem);
 
         return vi;
