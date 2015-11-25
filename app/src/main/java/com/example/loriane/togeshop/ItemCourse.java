@@ -1,5 +1,7 @@
 package com.example.loriane.togeshop;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by Sandjiv on 11/11/2015.
  */
@@ -10,6 +12,16 @@ public class ItemCourse {
     String nom;
     String prix;
     String URL;
+
+    public Bitmap getImageitem() {
+        return imageitem;
+    }
+
+    public void setImageitem(Bitmap imageitem) {
+        this.imageitem = imageitem;
+    }
+
+    Bitmap imageitem=null;
     Boolean disable =false;
     Boolean isTaken;
     String chosen = "*";

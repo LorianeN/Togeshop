@@ -85,7 +85,7 @@ public class Client {
     boolean connect(String nickName) {
         try {
             Log.d("SONPERE", "J'essaie de me connecter");
-            sock = new Socket("192.168.1.21", 10000);
+            sock = new Socket("192.168.140.52", 10000);
             curIn = new DataInputStream(sock.getInputStream());
             curOut = new DataOutputStream(sock.getOutputStream());
             System.out.println("j'écris mon nom via "+sock.toString());

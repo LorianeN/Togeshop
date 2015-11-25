@@ -181,6 +181,7 @@ public class ItemsFragment extends Fragment implements AbsListView.OnItemClickLi
                 HashMap<String, String> jose = new HashMap<>();
                 jose.put("titre",jean.get(i).getNom());
                 jose.put("url",jean.get(i).getURL());
+                Log.d("SONPERE","url : "+jean.get(i).getURL());
                 ItemsContent.addItem(new ItemsContent.DummyItem(jean.get(i).getIdItem(), jean.get(i).getNom()));
                 listItem.add(jose);
                 Log.d("SONPERE","fini d'ajouter l'item "+i);

@@ -41,14 +41,14 @@ public class ImageLoader {
     public void DisplayImage(String url, ImageView imageView)
     {
         imageViews.put(imageView, url);
-//        Bitmap bitmap=memoryCache.get(url);
-//        if(bitmap!=null)
-//            imageView.setImageBitmap(bitmap);
-//        else
-//        {
-//            queuePhoto(url, imageView);
-//            imageView.setImageResource(stub_id);
-//        }
+        Bitmap bitmap=memoryCache.get(url);
+        if(bitmap!=null)
+            imageView.setImageBitmap(bitmap);
+        else
+        {
+            queuePhoto(url, imageView);
+            imageView.setImageResource(stub_id);
+        }
     }
 
     private void queuePhoto(String url, ImageView imageView)
