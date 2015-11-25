@@ -3,8 +3,11 @@ package com.example.loriane.togeshop;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Icon;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
@@ -32,18 +35,23 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.example.loriane.togeshop.dummy.ListesContent;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ChoixListe extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener,OnFragmentInteractionListener{
 
     ListesFragsPagerAdapter listesFragsPagerAdapter;
     ViewPager mViewPager;
@@ -74,15 +82,6 @@ public class ChoixListe extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -178,8 +177,6 @@ public class ChoixListe extends AppCompatActivity
         }
     }
 
-
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -243,12 +240,77 @@ public class ChoixListe extends AppCompatActivity
         newFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
-    public void showNewListFragment(){
+    public void showNewListFragment(View v){
         mViewPager.setCurrentItem(1);
         AutoCompleteTextView editTextAddress = (AutoCompleteTextView) findViewById(R.id.adresse);
         editTextAddress.setAdapter(new AutoCompleteAdapter(this));
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setVisibility(View.INVISIBLE);
     }
 
+    public void cancel(View v){
+        mViewPager.setCurrentItem(0);
+        EditText nomList = (EditText) findViewById(R.id.nomListe);
+        nomList.setText("");
+        Button date = (Button) findViewById(R.id.tf_date);
+        date.setText('D'+'A'+'T'+'E');
+        AutoCompleteTextView address = (AutoCompleteTextView) findViewById(R.id.adresse);
+        address.setText("");
+        EditText description = (EditText) findViewById(R.id.descriptionListe);
+        description.setText("");
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setVisibility(View.VISIBLE);
+    }
+
+    public void validateNewList(View v){
+        EditText nomList = (EditText) findViewById(R.id.nomListe);
+        Button date = (Button) findViewById(R.id.tf_date);
+        AutoCompleteTextView address = (AutoCompleteTextView) findViewById(R.id.adresse);
+        EditText description = (EditText) findViewById(R.id.descriptionListe);
+
+        if(nomList.getText().toString().equals("")){
+            alertPopUp("Nom non complété");
+        }
+        else {
+            addListe(nomList.getText().toString(), description.getText().toString(), date.getText().toString(), address.getText().toString());
+            mViewPager.setCurrentItem(0);
+            nomList.setText("");
+            Log.d("SONPERE", "je set a DATE");
+            date.setText('D' + 'A' + 'T' + 'E');
+            Log.d("SONPERE","Done");
+            address.setText("");
+            description.setText("");
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public boolean addListe(String nomText, String descriptionListeText, String dateListeText, String endroitListeText) {
+        JSONObject envoi = new JSONObject();
+        try {
+            envoi.put("nomListe",nomText);
+            envoi.put("description",descriptionListeText);
+            envoi.put("date",dateListeText);
+            envoi.put("endroit",endroitListeText);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return Client.getClient().addListe(envoi.toString());
+    }
+
+    public void alertPopUp(String message){
+        AlertDialog alertDialog = new AlertDialog.Builder(ChoixListe.this).create();
+        alertDialog.setTitle("Alert");
+        alertDialog.setMessage(message);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
     // And the corresponding Adapter
     private class AutoCompleteAdapter extends ArrayAdapter<Address> implements Filterable {
 
