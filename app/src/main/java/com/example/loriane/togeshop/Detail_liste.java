@@ -3,6 +3,7 @@ package com.example.loriane.togeshop;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -24,6 +25,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import java.util.Locale;
 
 public class Detail_liste extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,OnFragmentInteractionListener {
@@ -52,7 +56,7 @@ public class Detail_liste extends AppCompatActivity
 //            Log.d("SAMERE","j'attend");
 //        }
         mViewPager.setAdapter(itemsFragsPagerAdapter);
-        Log.d("SONPERE","J'ai fini de set l'adapter de l'activité détail");
+        Log.d("SONPERE", "J'ai fini de set l'adapter de l'activité détail");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -60,8 +64,25 @@ public class Detail_liste extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                String uri = String.format(Locale.FRENCH, "http://maps.google.com/maps?daddr=%s","879 avenue de mimet");
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+                try
+                {
+                    startActivity(intent);
+                }
+                catch(ActivityNotFoundException ex)
+                {
+                    try
+                    {
+                        Intent unrestrictedIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                        startActivity(unrestrictedIntent);
+                    }
+                    catch(ActivityNotFoundException innerEx)
+                    {
+                        Log.d("SONPERE", "yapadmap");
+                    }
+                }
             }
         });
 
