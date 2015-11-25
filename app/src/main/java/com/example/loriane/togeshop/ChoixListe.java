@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -42,8 +43,8 @@ public class ChoixListe extends AppCompatActivity
         super.onCreate(savedInstanceState);
         Log.d("SONPERE", "j'ai mon monsieur connecté, je charge des trucs");
         setTitle(getIntent().getStringExtra("nom"));
-       principalFragment[0] = ListeFragment.newInstance(this);
-        principalFragment[1] = PlusOneFragment.newInstance("pouet","pouet");
+        principalFragment[0] = ListeFragment.newInstance(this);
+        principalFragment[1] = NewListFragment.newInstance("pouet","pouet");
         Log.d("SONPERE", "j'ai créé le fragment");
         while(!loadingFinished){
             Log.d("SAMERE","j'attend");
@@ -223,8 +224,9 @@ public class ChoixListe extends AppCompatActivity
         return true;
     }
 
-    public void detail(View view) {
-//
+    public void showDatePickerDialog(View v) {
+        DialogFragment newFragment = new DatePickerFragment();
+        newFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
 }
