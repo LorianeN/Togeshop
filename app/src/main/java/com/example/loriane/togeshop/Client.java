@@ -2,7 +2,10 @@ package com.example.loriane.togeshop;
 
 import android.app.Application;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.Image;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -82,7 +85,7 @@ public class Client {
     boolean connect(String nickName) {
         try {
             Log.d("SONPERE", "J'essaie de me connecter");
-            sock = new Socket("192.168.2.5", 10000);
+            sock = new Socket("192.168.128.108", 10000);
             curIn = new DataInputStream(sock.getInputStream());
             curOut = new DataOutputStream(sock.getOutputStream());
             System.out.println("j'écris mon nom via "+sock.toString());

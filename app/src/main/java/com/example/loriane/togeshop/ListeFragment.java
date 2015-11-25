@@ -1,5 +1,6 @@
 package com.example.loriane.togeshop;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -34,14 +35,9 @@ public class ListeFragment extends Fragment implements AbsListView.OnItemClickLi
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
     ArrayList<ListeCourse> jean = new ArrayList<>();
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private ChoixListe pouet;
 
     private OnFragmentInteractionListener mListener;
 
@@ -57,11 +53,9 @@ public class ListeFragment extends Fragment implements AbsListView.OnItemClickLi
     private ArrayAdapter mAdapter;
 
     // TODO: Rename and change types of parameters
-    public static ListeFragment newInstance(String param1, String param2) {
-        ListeFragment fragment = new ListeFragment();
+    public static ListeFragment newInstance(Activity pouet) {
+        ListeFragment fragment = new ListeFragment(pouet);
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -74,6 +68,12 @@ public class ListeFragment extends Fragment implements AbsListView.OnItemClickLi
         new GetListTask().execute();
     }
 
+    @SuppressLint("ValidFragment")
+    public ListeFragment(Activity pouet) {
+        this.pouet = (ChoixListe) pouet;
+        new GetListTask().execute();
+    }
+
     public  BaseAdapter getMAdapter() {
         return mAdapter;
     }
@@ -81,10 +81,6 @@ public class ListeFragment extends Fragment implements AbsListView.OnItemClickLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
         // TODO: Change Adapter to display your content
         mAdapter = new ArrayAdapter<ListesContent.DummyItem>(getActivity(),
                 android.R.layout.simple_list_item_1, android.R.id.text1, ListesContent.ITEMS);
@@ -159,17 +155,19 @@ public class ListeFragment extends Fragment implements AbsListView.OnItemClickLi
             NavigationController roger = new NavigationController();
 
             jean = roger.getListe();
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
             ListesContent.ITEMS.clear();
             ListesContent.ITEM_MAP.clear();
             for (int i =0;i<jean.size();i++){
                 Log.d("SONPERE", "j'ai reçu "+ jean.get(i).getNom());
                 ListesContent.addItem(new ListesContent.DummyItem(jean.get(i).getIdListe(), jean.get(i).getNom()));
             }
+            pouet.setLoadingFinished(true);
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+
         }
 
         @Override
