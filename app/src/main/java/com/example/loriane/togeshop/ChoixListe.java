@@ -56,7 +56,7 @@ public class ChoixListe extends AppCompatActivity
     ListesFragsPagerAdapter listesFragsPagerAdapter;
     ViewPager mViewPager;
 
-    Fragment[] principalFragment = new Fragment[2];
+    public static Fragment[] principalFragment = new Fragment[2];
     private View mProgressView;
     private View mLoginFormView;
     boolean loadingFinished =false;
@@ -276,7 +276,7 @@ public class ChoixListe extends AppCompatActivity
             mViewPager.setCurrentItem(0);
             nomList.setText("");
             Log.d("SONPERE", "je set a DATE");
-            date.setText('D' + 'A' + 'T' + 'E');
+            date.setText((CharSequence) "DATE");
             Log.d("SONPERE","Done");
             address.setText("");
             description.setText("");
@@ -295,8 +295,8 @@ public class ChoixListe extends AppCompatActivity
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        return Client.getClient().addListe(envoi.toString());
+        Client.getClient().addListe(envoi.toString());
+        return true;
     }
 
     public void alertPopUp(String message){

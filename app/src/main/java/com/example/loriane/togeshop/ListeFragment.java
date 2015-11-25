@@ -103,6 +103,9 @@ public class ListeFragment extends Fragment implements AbsListView.OnItemClickLi
         mListView.setOnItemClickListener(this);
         return view;
     }
+    public void refresh(){
+        new GetListTask().execute();
+    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -167,7 +170,7 @@ public class ListeFragment extends Fragment implements AbsListView.OnItemClickLi
 
         @Override
         protected void onPostExecute(final Boolean success) {
-
+            mAdapter.notifyDataSetChanged();
         }
 
         @Override
