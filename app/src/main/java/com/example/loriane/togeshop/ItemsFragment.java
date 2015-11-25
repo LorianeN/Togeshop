@@ -25,6 +25,7 @@ import com.example.loriane.togeshop.dummy.ItemsContent;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -139,9 +140,18 @@ public class ItemsFragment extends Fragment implements ListView.OnItemClickListe
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            Log.d("SONPERE", "item "+position);
-            listItem.get(position).setImageitem(overlay(listItem.get(position).getImageitem(),BitmapFactory.decodeResource(getResources(),R.drawable.check_vert)));
-            ItemAdapter.notifyDataSetChanged();
+            Log.d("SONPERE", "item " + position +" est "+listItem.get(position).getTaken()+" et choisi par "+ listItem.get(position).getChosen());
+            if (listItem.get(position).getChosen().equals(Client.getClient().getUserName()) || listItem.get(position).getChosen().equals("personne")) {
+                if(!listItem.get(position).getTaken()) {
+                    listItem.get(position).setImageitemCheck(overlay(listItem.get(position).getImageitem(), BitmapFactory.decodeResource(getResources(), R.drawable.check_vert)));
+                    ItemAdapter.notifyDataSetChanged();
+                    listItem.get(position).setTaken(true);
+                }
+                else{
+                    ItemAdapter.notifyDataSetChanged();
+                    listItem.get(position).setTaken(false);
+                }
+            }
                 mListener.onFragmentInteraction(String.valueOf(ItemsContent.ITEMS.get(position).id));
         }
     }
@@ -170,7 +180,11 @@ public class ItemsFragment extends Fragment implements ListView.OnItemClickListe
         // "RECREATE" THE NEW BITMAP
         Bitmap resizedBitmap = Bitmap.createBitmap(
                 bm, 0, 0, width, height, matrix, false);
-        bm.recycle();
+        if (bm != null && !bm.isRecycled()) {
+           //  bm.recycle();
+            bm = null;
+        }
+        //bm.recycle();
         return resizedBitmap;
     }
 
@@ -207,19 +221,27 @@ public class ItemsFragment extends Fragment implements ListView.OnItemClickListe
                ItemCourse jose = new ItemCourse();
                 jose.setNom(jean.get(i).getNom());
                 jose.setURL(jean.get(i).getURL());
+                if(!jean.get(i).getChosen().equals("*")) jose.setChosen(jean.get(i).getChosen());
+                else jose.setChosen("personne");
                 try {
                     URL url = new URL(jose.getURL());
-                    Log.d("SONPERE","j'ai l'url"+url.toString());
-                    InputStream content = (InputStream)url.getContent();
-                    Log.d("SONPERE", "je créé donc le drawable a partir de "+ content.equals(null));
+                    Log.d("SONPERE", "j'ai l'url " + url.toString());
+                    InputStream content = (InputStream) url.getContent();
+                    Log.d("SONPERE", "je créé donc le drawable a partir de " + content.equals(null));
                     Bitmap image = BitmapFactory.decodeStream(content);
-                    if(image==null||content==null) {
+                    if (image != null & content != null) {
                         jose.setImageitem(Bitmap.createScaledBitmap(image, 150, 150, false));
-                    }else{
-                        jose.setImageitem(BitmapFactory.decodeResource(getResources(),R.drawable.no_image));
+                    } else {
+                        jose.setImageitem(BitmapFactory.decodeResource(getResources(), R.drawable.no_image));
                     }
-                } catch (Exception e) {
-                    jose.setImageitem(BitmapFactory.decodeResource(getResources(),R.drawable.no_image));
+                    if(!jean.get(i).getChosen().equals("*")){
+                        jose.setChosen(jean.get(i).getChosen());
+                        jose.setImageitem(overlay(jose.getImageitem(), BitmapFactory.decodeResource(getResources(), R.drawable.check_vert)));
+                    }
+                    else jose.setChosen("personne");
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
 

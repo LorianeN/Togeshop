@@ -21,9 +21,18 @@ public class ItemCourse {
         this.imageitem = imageitem;
     }
 
+    public Bitmap getImageitemCheck() {
+        return imageitemCheck;
+    }
+
+    public void setImageitemCheck(Bitmap imageitemCheck) {
+        this.imageitemCheck = imageitemCheck;
+    }
+
+    Bitmap imageitemCheck =null;
     Bitmap imageitem=null;
     Boolean disable =false;
-    Boolean isTaken;
+    Boolean isTaken =false;
     String chosen = "*";
 
     public ItemCourse() {
