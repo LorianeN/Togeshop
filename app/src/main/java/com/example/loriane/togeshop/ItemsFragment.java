@@ -9,6 +9,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import com.example.loriane.togeshop.dummy.ItemsContent;
 import com.example.loriane.togeshop.dummy.ListesContent;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,7 +60,7 @@ public class ItemsFragment extends Fragment implements AbsListView.OnItemClickLi
      */
     private ListView mListView;
 
-    ArrayList<HashMap<String, String>> listItem = new ArrayList<HashMap<String, String>>();
+    ArrayList<ItemCourse> listItem = new ArrayList<ItemCourse>();
     /**
      * The Adapter which will be used to populate the ListView/GridView with
      * Views.
@@ -94,10 +96,13 @@ public class ItemsFragment extends Fragment implements AbsListView.OnItemClickLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        listItem.clear();
+        Log.d("SONPERE", "suis passé par le constructeur une fois");
+        //listItem.clear();
         // TODO: Change Adapter to display your content
         mAdapter = new ArrayAdapter<ItemsContent.DummyItem>(getActivity(),
                 android.R.layout.simple_list_item_1, android.R.id.text1, ItemsContent.ITEMS);
+        // TODO: Change Adapter to display your content
+        ItemAdapter = new LazyAdapter(pouet, listItem);
     }
 
     @Override
@@ -105,11 +110,10 @@ public class ItemsFragment extends Fragment implements AbsListView.OnItemClickLi
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_items, container, false);
 
+
         Log.d("SONPERE", "je créé la view de mon fragment list detail_liste");
-        // TODO: Change Adapter to display your content
-        ItemAdapter = new LazyAdapter(pouet, listItem);
         mListView = (ListView) view.findViewById(R.id.liste_items);
-        mListView.setAdapter(mAdapter);
+        mListView.setAdapter(ItemAdapter);
         Log.d("SONPERE","c'est fait (view Fragment item)!");
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
@@ -176,9 +180,20 @@ public class ItemsFragment extends Fragment implements AbsListView.OnItemClickLi
             Log.d("SONPERE","j'ai fini de récupérer côté client !!");
             Log.d("SONPERE", "on passe au poste execute, j'ai "+jean.size()+" items");
             for (int i =0;i<jean.size();i++){
-                HashMap<String, String> jose = new HashMap<>();
-                jose.put("titre",jean.get(i).getNom());
-                jose.put("url",jean.get(i).getURL());
+               ItemCourse jose = new ItemCourse();
+                jose.setNom(jean.get(i).getNom());
+                jose.setURL(jean.get(i).getURL());
+                try {
+                    URL url = new URL(jose.getURL());
+                    InputStream content = (InputStream)url.getContent();
+                    Log.d("SONPERE","je créé donc le drawable");
+                    jose.setImageitem(BitmapFactory.decodeStream(content));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return true;
+                }
+
+                Log.d("SONPERE","url : "+jean.get(i).getURL());
                 ItemsContent.addItem(new ItemsContent.DummyItem(jean.get(i).getIdItem(), jean.get(i).getNom()));
                 listItem.add(jose);
                 Log.d("SONPERE","fini d'ajouter l'item "+i);
@@ -190,7 +205,6 @@ public class ItemsFragment extends Fragment implements AbsListView.OnItemClickLi
 
         @Override
         protected void onPostExecute(final Boolean success) {
-
         }
 
         @Override

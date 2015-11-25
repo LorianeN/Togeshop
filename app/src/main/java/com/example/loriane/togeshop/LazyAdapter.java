@@ -27,17 +27,18 @@ import android.widget.TextView;
 public class LazyAdapter extends BaseAdapter {
 
     private Activity activity;
-    private ArrayList<HashMap<String, String>> data;
+    private ArrayList<ItemCourse> data;
     private static LayoutInflater inflater=null;
     public ImageLoader imageLoader;
     boolean waiting =false;
     Bitmap pouet =null;
     Drawable d;
 
-    public LazyAdapter(Activity a, ArrayList<HashMap<String, String>> d) {
+    public LazyAdapter(Activity a, ArrayList<ItemCourse> d) {
+        Log.d("SONPERE", "j'ai créé mon adapter");
         activity = a;
         data=d;
-
+        Log.d("SONPERE", "il a reçu "+data.size()+" items");
         inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         imageLoader=new ImageLoader(activity.getApplicationContext());
     }
@@ -46,6 +47,11 @@ public class LazyAdapter extends BaseAdapter {
         return data.size();
     }
 
+    static class ViewHolderItem{
+        public TextView titleitem;
+        public TextView descriptionitem;
+        public ImageView ImageViewitem;
+    }
     public Object getItem(int position) {
         return position;
     }
@@ -55,40 +61,62 @@ public class LazyAdapter extends BaseAdapter {
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-        Log.d("SONPERE", "je devrais passer par là");
         View vi=convertView;
-        if(convertView==null)
+        ViewHolderItem viewHolder =null;
+        if(convertView==null) {
             vi = inflater.inflate(R.layout.items_cell_content, null);
-        TextView title = (TextView)vi.findViewById(R.id.titre); // title
-        TextView description = (TextView)vi.findViewById(R.id.description); // artist name
-        ImageView thumb_image=(ImageView)vi.findViewById(R.id.img); // thumb image
-        Log.d("SONPERE","position :"+ position);
-        Log.d("SONPERE","je traite l'item "+data.get(position).get("titre"));
-//        HashMap<String, String> song = new HashMap<String, String>();
-//        song = data.get(position);
-
-        // Setting all values in listview
-        title.setText(data.get(position).get("titre"));
-        description.setText("description");
-        new GetImageTask().execute(data.get(position).get("url"));
+            viewHolder = new ViewHolderItem();
+            viewHolder.titleitem = (TextView) vi.findViewById(R.id.titre); // title
+            viewHolder.descriptionitem = (TextView) vi.findViewById(R.id.description);
+            viewHolder.ImageViewitem = (ImageView) vi.findViewById(R.id.img); // thumb image
+            vi.setTag(viewHolder);
+        }
+        else{
+            viewHolder = (ViewHolderItem) convertView.getTag();
+        }
+        final  ItemCourse Item = data.get(position);
+        GetImageTask roger = new GetImageTask(Item.getURL(),viewHolder);
+        roger.execute();
         Log.d("SONPERE", "je commence à attendre");
-        while(!waiting){}
-        Log.d("SONPERE", "j'ai fini d'attendre !!");
-        waiting =false;
-        thumb_image.setImageDrawable(d);
-        //imageLoader.DisplayImage(data.get(position).get("url"), thumb_image);
+        long cpt=0;
+        while (!waiting&cpt<60000000) {
+            cpt++;
+        }
+        if (cpt==60000000){
+            Log.d("SONPERE","timeout :/");
+            viewHolder.ImageViewitem.setImageResource(R.drawable.no_image);
+        }
+        else{
+            Log.d("SONPERE", "j'ai fini d'attendre !!");
+            //imageLoader.DisplayImage(data.get(position).get("url"), thumb_image);
+        }
+        Log.d("SONPERE", "position :" + position);
+        Log.d("SONPERE", "je traite l'item " + Item.getNom());
+        // Setting all values in listview
+        viewHolder.titleitem.setText(Item.getNom());
+        viewHolder.descriptionitem.setText("description");
+       // imageLoader.DisplayImage(Item.get("url"), viewHolder.ImageViewitem);
+
         return vi;
     }
 
     public class GetImageTask extends AsyncTask<String,String,Boolean> {
+        String url;
+        ViewHolderItem viewHolder;
 
+        public GetImageTask(String url, ViewHolderItem viewHolder) {
+            this.url = url;
+            this.viewHolder = viewHolder;
+        }
 
         @Override
         protected Boolean doInBackground(String... params) {
             try {
-                Log.d("SONPERE", "je traite l'url "+params[0]);
-                URL url = new URL(params[0]);
+                waiting = false;
+                Log.d("SONPERE", "je traite l'url "+url);
+                URL url = new URL(this.url);
                 InputStream content = (InputStream)url.getContent();
+                Log.d("SONPERE","je créé donc le drawable");
                 d = Drawable.createFromStream(content, "src");
             } catch (IOException e) {
                 waiting = true;
@@ -102,11 +130,13 @@ public class LazyAdapter extends BaseAdapter {
         @Override
         protected void onPostExecute(final Boolean success) {
             //Log.d("SONPERE", "je passe en post execute");
+            viewHolder.ImageViewitem.setImageDrawable(d);
         }
 
         @Override
         protected void onCancelled() {
         }
+
     }
 
 }
