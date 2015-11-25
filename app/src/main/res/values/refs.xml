@@ -17,5 +17,4 @@
     http://developer.android.com/training/multiscreen/screensizes.html#TaskUseAliasFilters
     -->
     <item name="fragment_items" type="layout">@layout/fragment_items_list</item>
-
 </resources>

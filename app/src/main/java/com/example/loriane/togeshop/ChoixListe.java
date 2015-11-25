@@ -43,7 +43,7 @@ public class ChoixListe extends AppCompatActivity
         Log.d("SONPERE", "j'ai mon monsieur connecté, je charge des trucs");
         setTitle(getIntent().getStringExtra("nom"));
        principalFragment[0] = ListeFragment.newInstance(this);
-        principalFragment[1] = PlusOneFragment.newInstance("pouet","pouet");
+        principalFragment[1] = ListeFragment.newInstance(this);
         Log.d("SONPERE", "j'ai créé le fragment");
         while(!loadingFinished){
             Log.d("SAMERE","j'attend");
@@ -207,7 +207,7 @@ public class ChoixListe extends AppCompatActivity
         if (id == R.id.nav_camara) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
-            mViewPager.setCurrentItem(1);
+
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {

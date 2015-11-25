@@ -1,17 +1,14 @@
 package com.example.loriane.togeshop;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
+import android.graphics.Matrix;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -21,18 +18,15 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.loriane.togeshop.dummy.ItemsContent;
-import com.example.loriane.togeshop.dummy.ListesContent;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * A fragment representing a list of Items.
@@ -43,7 +37,7 @@ import java.util.HashMap;
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
  * interface.
  */
-public class ItemsFragment extends Fragment implements AbsListView.OnItemClickListener {
+public class ItemsFragment extends Fragment implements ListView.OnItemClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -145,9 +139,39 @@ public class ItemsFragment extends Fragment implements AbsListView.OnItemClickLi
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            parent.getChildAt(position).setBackgroundColor(Color.BLUE);
-            mListener.onFragmentInteraction(String.valueOf(ItemsContent.ITEMS.get(position).id));
+            Log.d("SONPERE", "item "+position);
+            listItem.get(position).setImageitem(overlay(listItem.get(position).getImageitem(),BitmapFactory.decodeResource(getResources(),R.drawable.check_vert)));
+            ItemAdapter.notifyDataSetChanged();
+                mListener.onFragmentInteraction(String.valueOf(ItemsContent.ITEMS.get(position).id));
         }
+    }
+
+    public Bitmap overlay(Bitmap bmp1, Bitmap bmp2) {
+        Bitmap bmOverlay = Bitmap.createBitmap(bmp2.getWidth(), bmp2.getHeight(), bmp1.getConfig());
+        float left =(bmp2.getWidth() - (bmp1.getWidth()*((float)bmp2.getHeight()/(float)bmp1.getHeight())))/(float)2.0;
+        float bmp1newW = bmp1.getWidth()*((float)bmp2.getHeight()/(float)bmp1.getHeight());
+        Bitmap bmp1new = getResizedBitmap(bmp1, bmp2.getHeight(), (int)bmp1newW);
+        Canvas canvas = new Canvas(bmOverlay);
+        canvas.drawBitmap(bmp1new, left ,0 , null);
+        canvas.drawBitmap(bmp2, new Matrix(), null);
+        return bmOverlay;
+    }
+
+    public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        // CREATE A MATRIX FOR THE MANIPULATION
+        Matrix matrix = new Matrix();
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        // "RECREATE" THE NEW BITMAP
+        Bitmap resizedBitmap = Bitmap.createBitmap(
+                bm, 0, 0, width, height, matrix, false);
+        bm.recycle();
+        return resizedBitmap;
     }
 
     /**
@@ -185,26 +209,34 @@ public class ItemsFragment extends Fragment implements AbsListView.OnItemClickLi
                 jose.setURL(jean.get(i).getURL());
                 try {
                     URL url = new URL(jose.getURL());
+                    Log.d("SONPERE","j'ai l'url"+url.toString());
                     InputStream content = (InputStream)url.getContent();
-                    Log.d("SONPERE","je créé donc le drawable");
-                    jose.setImageitem(BitmapFactory.decodeStream(content));
-                } catch (IOException e) {
+                    Log.d("SONPERE", "je créé donc le drawable a partir de "+ content.equals(null));
+                    Bitmap image = BitmapFactory.decodeStream(content);
+                    if(image==null||content==null) {
+                        jose.setImageitem(Bitmap.createScaledBitmap(image, 150, 150, false));
+                    }else{
+                        jose.setImageitem(BitmapFactory.decodeResource(getResources(),R.drawable.no_image));
+                    }
+                } catch (Exception e) {
+                    jose.setImageitem(BitmapFactory.decodeResource(getResources(),R.drawable.no_image));
                     e.printStackTrace();
-                    return true;
                 }
 
-                Log.d("SONPERE","url : "+jean.get(i).getURL());
                 ItemsContent.addItem(new ItemsContent.DummyItem(jean.get(i).getIdItem(), jean.get(i).getNom()));
                 listItem.add(jose);
                 Log.d("SONPERE","fini d'ajouter l'item "+i);
             }
             Log.d("SONPERE", "aye c'est fini");
-            pouet.setLoadingFinished(true);
+            //pouet.setLoadingFinished(true);
+
             return true;
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
+            pouet.spinner.setVisibility(View.GONE);
+            ItemAdapter.notifyDataSetChanged();
         }
 
         @Override
