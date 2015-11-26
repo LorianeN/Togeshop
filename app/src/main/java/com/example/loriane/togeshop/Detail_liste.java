@@ -25,7 +25,7 @@ public class Detail_liste extends AppCompatActivity implements NavigationView.On
     ItemsFragsPagerAdapter itemsFragsPagerAdapter;
     ViewPager mViewPager;
     public ProgressBar spinner;
-    Fragment[] ItemActionFragments = new Fragment[2];
+    Fragment[] ItemActionFragments = new Fragment[5];
     boolean loadingFinished =false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +34,9 @@ public class Detail_liste extends AppCompatActivity implements NavigationView.On
         setTitle(getIntent().getStringExtra("nom"));
         ItemActionFragments[0] = ItemsFragment.newInstance(this);
         ItemActionFragments[1] = NewItemFragment.newInstance("","");
-        //ItemActionFragments[2] = InfoListFragment.newInstance("","");
-        //ItemActionFragments[3] = ShareListFragment.newInstance("","");
-        //ItemActionFragments[4] = SendSmsNewFragment.newInstance("","");
+        ItemActionFragments[2] = InfoListFragment.newInstance("","");
+        ItemActionFragments[3] = ShareListFragment.newInstance("","");
+        ItemActionFragments[4] = SendSmsNewFragment.newInstance("","");
 
         Log.d("SONPERE", "j'ai mon fragment item");
         setContentView(R.layout.activity_detail_liste);
@@ -158,15 +158,15 @@ public class Detail_liste extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.nav_infoList) {
-            //showinfoListFragment();
+            showinfoListFragment();
         } else if (id == R.id.nav_addItem) {
-            //showNewItemFragment();
+            showNewItemFragment();
         } else if (id == R.id.nav_ListItem) {
-            //showListItemFragment();
+            showListItemFragment();
         } else if (id == R.id.nav_shareList) {
-            //showShareListFragment();
+            showShareListFragment();
         } else if (id == R.id.nav_sendSMS) {
-            //showSendSmsFragment();
+            showSendSmsFragment();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
