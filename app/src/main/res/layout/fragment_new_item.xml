@@ -3,8 +3,75 @@
     android:layout_height="match_parent"
     tools:context="com.example.loriane.togeshop.NewItemFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ajout de nouveaux produits"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="@color/colorAccent"
+            android:textSize="24dp"/>
+
+        <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText android:id="@+id/nomListe" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:hint="Nom du produit recherché"
+                android:inputType="text" android:maxLines="1"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/tf_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Chercher ce type de produits"
+            android:textColor="#FFFFFF"
+            android:background="@color/colorPrimary"
+            android:onClick="searchItems"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Scrollview à implémenter" />
+
+        <ScrollView
+            android:id="@+id/resultSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Affichage résultat"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="@color/colorAccent"
+            android:textSize="24dp"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Retour"
+                android:textColor="#FFFFFF"
+                android:background="@color/colorPrimary"
+                android:onClick="cancelNewItem"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="valider"
+                android:textColor="#FFFFFF"
+                android:background="@color/colorPrimary"
+                android:onClick="validateNewItem"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
 
 </FrameLayout>
