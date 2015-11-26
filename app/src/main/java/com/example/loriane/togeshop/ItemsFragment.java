@@ -92,9 +92,8 @@ public class ItemsFragment extends Fragment implements ListView.OnItemClickListe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("SONPERE", "suis passé par le constructeur une fois");
-        //listItem.clear();
         // TODO: Change Adapter to display your content
-        mAdapter = new ArrayAdapter<ItemsContent.DummyItem>(getActivity(),
+        mAdapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_list_item_1, android.R.id.text1, ItemsContent.ITEMS);
         // TODO: Change Adapter to display your content
         ItemAdapter = new LazyAdapter(pouet, listItem);
@@ -112,7 +111,6 @@ public class ItemsFragment extends Fragment implements ListView.OnItemClickListe
         Log.d("SONPERE","c'est fait (view Fragment item)!");
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
-
         ItemAdapter.notifyDataSetChanged();
 
         return view;
