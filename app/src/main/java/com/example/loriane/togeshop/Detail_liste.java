@@ -6,7 +6,6 @@ import android.annotation.TargetApi;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -29,20 +28,24 @@ import android.widget.Toast;
 
 import java.util.Locale;
 
-public class Detail_liste extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,OnFragmentInteractionListener {
+public class Detail_liste extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,OnFragmentInteractionListener {
 
     ItemsFragsPagerAdapter itemsFragsPagerAdapter;
     ViewPager mViewPager;
     public ProgressBar spinner;
-    Fragment[] itemsFragment = new Fragment[1];
+    Fragment[] ItemActionFragments = new Fragment[2];
     boolean loadingFinished =false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("SONPERE", "j'ai créé mon activité detail_liste");
         setTitle(getIntent().getStringExtra("nom"));
-        itemsFragment[0] = ItemsFragment.newInstance(this);
+        ItemActionFragments[0] = ItemsFragment.newInstance(this);
+        ItemActionFragments[1] = NewItemFragment.newInstance("","");
+        //ItemActionFragments[2] = InfoListFragment.newInstance("","");
+        //ItemActionFragments[3] = ShareListFragment.newInstance("","");
+        //ItemActionFragments[4] = SendSmsNewFragment.newInstance("","");
+
         Log.d("SONPERE", "j'ai mon fragment item");
         setContentView(R.layout.activity_detail_liste);
         spinner = (ProgressBar)findViewById(R.id.progressBar1);
@@ -126,12 +129,12 @@ public class Detail_liste extends AppCompatActivity
 
         @Override
         public Fragment getItem(int i) {
-            return itemsFragment[0];
+            return ItemActionFragments[i];
         }
 
         @Override
         public int getCount() {
-            return itemsFragment.length;
+            return ItemActionFragments.length;
         }
 
         @Override
@@ -179,22 +182,50 @@ public class Detail_liste extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camara) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.nav_infoList) {
+            //showinfoListFragment();
+        } else if (id == R.id.nav_addItem) {
+            //showNewItemFragment();
+        } else if (id == R.id.nav_ListItem) {
+            //showListItemFragment();
+        } else if (id == R.id.nav_shareList) {
+            //showShareListFragment();
+        } else if (id == R.id.nav_sendSMS) {
+            //showSendSmsFragment();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void showNewItemFragment(){
+        mViewPager.setCurrentItem(1);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setVisibility(View.INVISIBLE);
+    }
+
+    public void showListItemFragment(){
+        mViewPager.setCurrentItem(0);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setVisibility(View.VISIBLE);
+    }
+
+    public void showinfoListFragment(){
+        mViewPager.setCurrentItem(2);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setVisibility(View.VISIBLE);
+    }
+
+    public void showShareListFragment(){
+        mViewPager.setCurrentItem(3);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setVisibility(View.INVISIBLE);
+    }
+
+    public void showSendSmsFragment(){
+        mViewPager.setCurrentItem(4);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setVisibility(View.INVISIBLE);
     }
 }
