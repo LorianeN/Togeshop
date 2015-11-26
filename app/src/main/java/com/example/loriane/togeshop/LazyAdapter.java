@@ -92,11 +92,29 @@ public class LazyAdapter extends BaseAdapter {
 //        }
 
         Log.d("SONPERE", "position :" + position);
-        Log.d("SONPERE", "je traite l'item " + Item.getNom());
+        Log.d("SONPERE", "je traite l'item " + Item.getNom() + "qui est " + Item.getTaken() + "pris");
         // Setting all values in listview
         viewHolder.titleitem.setText(Item.getNom());
-        viewHolder.descriptionitem.setText("description");
-        viewHolder.ImageViewitem.setImageBitmap(Item.getImageitem());
+        viewHolder.descriptionitem.setText(String.format("apporté par %s", Item.getChosen()));
+        if (Item.getChosen().equals(Client.getClient().getUserName())) {
+            if (Item.getTaken()) {
+                viewHolder.ImageViewitem.setImageBitmap(Item.getImageitemCheck());
+            }
+            else{
+                viewHolder.ImageViewitem.setImageBitmap(Item.getImageitem());
+            }
+        }
+        else if (Item.getChosen().equals("personne")||Item.getChosen().equals("")){
+            if (Item.getTaken()) {
+                viewHolder.ImageViewitem.setImageBitmap(Item.getImageitemCheck());
+            }
+            else{
+                viewHolder.ImageViewitem.setImageBitmap(Item.getImageitem());
+            }
+        }else{
+            viewHolder.ImageViewitem.setImageBitmap(Item.getImageitemCheck());
+        }
+
        // imageLoader.DisplayImage(Item.get("url"), viewHolder.ImageViewitem);
 
         return vi;

@@ -6,8 +6,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.Image;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.example.loriane.togeshop.dummy.ListesContent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -243,18 +246,10 @@ public class Client {
 
 
     public boolean addListe(String text) {
-        boolean retour = false;
-        String requete = "ajoutListe/0/"+text;
-        System.out.println("j'ajoute une liste");
-        try {
-            curOut.writeUTF(requete);
-            System.out.println("done, j'attend des retours éventuels");
-            retour = curIn.readBoolean();
-            System.out.println("done");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return retour;
+
+        addListTask nuage = new addListTask(text);
+        nuage.execute();
+        return true;
     }
 
     public boolean addItem(String text) {
@@ -332,13 +327,9 @@ public class Client {
     }
 
     public boolean sendRequest(String requete) {
-        try{
-            curOut.writeUTF(requete);
-            return curIn.readBoolean();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
+        updateItemTask nuage = new updateItemTask(requete);
+        nuage.execute();
+        return true;
     }
 
     public void suppressLogin() {
@@ -366,5 +357,70 @@ public class Client {
 
     public String getNameCurrentList(){
         return nameCurrentList;
+    }
+
+
+    public class updateItemTask extends AsyncTask<Void, Void, Boolean> {
+        String text;
+        updateItemTask(String jason) {
+            text =jason;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            boolean retour = false;
+            try{
+                curOut.writeUTF(text);
+                return curIn.readBoolean();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            if(success){
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+        }
+    }
+
+
+    public class addListTask extends AsyncTask<Void, Void, Boolean> {
+String text;
+        addListTask(String jason) {
+            text =jason;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            boolean retour = false;
+            String requete = "ajoutListe/0/"+text;
+            System.out.println("j'ajoute une liste");
+            try {
+                curOut.writeUTF(requete);
+                System.out.println("done, j'attend des retours éventuels");
+                retour = curIn.readBoolean();
+                System.out.println("done");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return retour;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            if(success){
+                ((ListeFragment)ChoixListe.principalFragment[0]).refresh();
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+        }
     }
 }
