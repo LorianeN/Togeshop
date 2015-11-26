@@ -5,8 +5,10 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -23,10 +25,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AutoCompleteTextView;
 import android.widget.ProgressBar;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class Detail_liste extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,OnFragmentInteractionListener {
 
@@ -34,6 +41,13 @@ public class Detail_liste extends AppCompatActivity implements NavigationView.On
     ViewPager mViewPager;
     public ProgressBar spinner;
     Fragment[] ItemActionFragments = new Fragment[5];
+
+
+    private ArrayList<Map<String, String>> mPeopleList;
+    private SimpleAdapter mAdapter;
+    private AutoCompleteTextView mTxtPhoneNo;
+
+
     boolean loadingFinished =false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -225,7 +239,73 @@ public class Detail_liste extends AppCompatActivity implements NavigationView.On
 
     public void showSendSmsFragment(){
         mViewPager.setCurrentItem(4);
+        mPeopleList = new ArrayList<Map<String, String>>();
+        PopulatePeopleList();
+        mAdapter = new SimpleAdapter(this, mPeopleList, R.layout.custcontview ,new String[] { "Name", "Phone" , "Type" }, new int[] { R.id.ccontName, R.id.ccontNo, R.id.ccontType });
+        mTxtPhoneNo = (AutoCompleteTextView) findViewById(R.id.mmWhoNo);
+        mTxtPhoneNo.setAdapter(mAdapter);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setVisibility(View.INVISIBLE);
+    }
+
+    public void PopulatePeopleList()
+    {
+
+        mPeopleList.clear();
+
+        Cursor people = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+
+        while (people.moveToNext())
+        {
+            String contactName = people.getString(people.getColumnIndex(
+                    ContactsContract.Contacts.DISPLAY_NAME));
+
+            String contactId = people.getString(people.getColumnIndex(
+                    ContactsContract.Contacts._ID));
+            String hasPhone = people.getString(people.getColumnIndex(
+                    ContactsContract.Contacts.HAS_PHONE_NUMBER));
+
+            if ((Integer.parseInt(hasPhone) > 0))
+            {
+
+                // You know have the number so now query it like this
+                Cursor phones = getContentResolver().query(
+                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                        null,
+                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId,
+                        null, null);
+                while (phones.moveToNext()) {
+
+                    //store numbers and display a dialog letting the user select which.
+                    String phoneNumber = phones.getString(
+                            phones.getColumnIndex(
+                                    ContactsContract.CommonDataKinds.Phone.NUMBER));
+
+                    String numberType = phones.getString(phones.getColumnIndex(
+                            ContactsContract.CommonDataKinds.Phone.TYPE));
+
+                    Map<String, String> NamePhoneType = new HashMap<String, String>();
+
+                    NamePhoneType.put("Name", contactName);
+                    NamePhoneType.put("Phone", phoneNumber);
+
+                    if(numberType.equals("0"))
+                        NamePhoneType.put("Type", "Work");
+                    else
+                    if(numberType.equals("1"))
+                        NamePhoneType.put("Type", "Home");
+                    else if(numberType.equals("2"))
+                        NamePhoneType.put("Type",  "Mobile");
+                    else
+                        NamePhoneType.put("Type", "Other");
+
+                    //Then add this map to the list.
+                    mPeopleList.add(NamePhoneType);
+                }
+                phones.close();
+            }
+        }
+        people.close();
+        startManagingCursor(people);
     }
 }
