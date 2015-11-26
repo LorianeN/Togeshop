@@ -138,7 +138,7 @@ public class ItemsFragment extends Fragment implements ListView.OnItemClickListe
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            Log.d("SONPERE", "item " + position +" est "+listItem.get(position).getTaken()+" et choisi par "+ listItem.get(position).getChosen());
+            Log.d("SONPERE", "item " + position + " est " + listItem.get(position).getTaken() + " et choisi par " + listItem.get(position).getChosen());
             if (listItem.get(position).getChosen().equals(Client.getClient().getUserName()) || listItem.get(position).getChosen().equals("personne")) {
                 if(!listItem.get(position).getTaken()) {
                     listItem.get(position).setImageitemCheck(overlay(listItem.get(position).getImageitem(), BitmapFactory.decodeResource(getResources(), R.drawable.check_vert)));
@@ -256,7 +256,9 @@ public class ItemsFragment extends Fragment implements ListView.OnItemClickListe
         @Override
         protected void onPostExecute(final Boolean success) {
             pouet.spinner.setVisibility(View.GONE);
-            ItemAdapter.notifyDataSetChanged();
+            if(ItemAdapter!=null) {
+                ItemAdapter.notifyDataSetChanged();
+            }
         }
 
         @Override
