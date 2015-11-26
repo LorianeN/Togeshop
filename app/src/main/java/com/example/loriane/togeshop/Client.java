@@ -327,13 +327,9 @@ public class Client {
     }
 
     public boolean sendRequest(String requete) {
-        try{
-            curOut.writeUTF(requete);
-            return curIn.readBoolean();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
+        updateItemTask nuage = new updateItemTask(requete);
+        nuage.execute();
+        return true;
     }
 
     public void suppressLogin() {
@@ -363,6 +359,35 @@ public class Client {
         return nameCurrentList;
     }
 
+
+    public class updateItemTask extends AsyncTask<Void, Void, Boolean> {
+        String text;
+        updateItemTask(String jason) {
+            text =jason;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            boolean retour = false;
+            try{
+                curOut.writeUTF(text);
+                return curIn.readBoolean();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            if(success){
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+        }
+    }
 
 
     public class addListTask extends AsyncTask<Void, Void, Boolean> {

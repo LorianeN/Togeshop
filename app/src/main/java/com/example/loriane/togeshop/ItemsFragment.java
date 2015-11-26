@@ -47,7 +47,7 @@ public class ItemsFragment extends Fragment implements ListView.OnItemClickListe
 
     ArrayList<ItemCourse> jean = new ArrayList<>();
 
-
+    NavigationController roger = new NavigationController();
     private OnFragmentInteractionListener mListener;
 
     /**
@@ -138,16 +138,20 @@ public class ItemsFragment extends Fragment implements ListView.OnItemClickListe
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            Log.d("SONPERE", "item " + position + " est " + listItem.get(position).getTaken() + " et choisi par " + listItem.get(position).getChosen());
+            Log.d("SONPERE", "item " + listItem.get(position).getIdItem() + " est " + listItem.get(position).getTaken() + " et choisi par " + listItem.get(position).getChosen());
             if (listItem.get(position).getChosen().equals(Client.getClient().getUserName()) || listItem.get(position).getChosen().equals("personne")) {
                 if(!listItem.get(position).getTaken()) {
-                    listItem.get(position).setImageitemCheck(overlay(listItem.get(position).getImageitem(), BitmapFactory.decodeResource(getResources(), R.drawable.check_vert)));
-                    ItemAdapter.notifyDataSetChanged();
+                    listItem.get(position).setChosen(Client.getClient().getUserName());
                     listItem.get(position).setTaken(true);
+                    ItemAdapter.notifyDataSetChanged();
+
+                    roger.itemUpdated(true,listItem.get(position).getIdItem());
                 }
                 else{
-                    ItemAdapter.notifyDataSetChanged();
+                    listItem.get(position).setChosen("personne");
                     listItem.get(position).setTaken(false);
+                    ItemAdapter.notifyDataSetChanged();
+                    roger.itemUpdated(false, listItem.get(position).getIdItem());
                 }
             }
                 mListener.onFragmentInteraction(String.valueOf(ItemsContent.ITEMS.get(position).id));
@@ -218,9 +222,16 @@ public class ItemsFragment extends Fragment implements ListView.OnItemClickListe
             for (int i =0;i<jean.size();i++){
                ItemCourse jose = new ItemCourse();
                 jose.setNom(jean.get(i).getNom());
+                jose.setIdItem(jean.get(i).getIdItem());
                 jose.setURL(jean.get(i).getURL());
-                if(!jean.get(i).getChosen().equals("*")) jose.setChosen(jean.get(i).getChosen());
-                else jose.setChosen("personne");
+                if(!jean.get(i).getChosen().equals("")){
+                    jose.setChosen(jean.get(i).getChosen());
+                    jose.setTaken(true);
+                }
+                else{
+                    jose.setChosen("personne");
+                    jose.setTaken(false);
+                }
                 try {
                     URL url = new URL(jose.getURL());
                     Log.d("SONPERE", "j'ai l'url " + url.toString());
@@ -232,11 +243,7 @@ public class ItemsFragment extends Fragment implements ListView.OnItemClickListe
                     } else {
                         jose.setImageitem(BitmapFactory.decodeResource(getResources(), R.drawable.no_image));
                     }
-                    if(!jean.get(i).getChosen().equals("*")){
-                        jose.setChosen(jean.get(i).getChosen());
-                        jose.setImageitem(overlay(jose.getImageitem(), BitmapFactory.decodeResource(getResources(), R.drawable.check_vert)));
-                    }
-                    else jose.setChosen("personne");
+                    jose.setImageitemCheck(overlay(jose.getImageitem(), BitmapFactory.decodeResource(getResources(), R.drawable.check_vert)));
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
