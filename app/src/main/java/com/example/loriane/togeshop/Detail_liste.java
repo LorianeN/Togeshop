@@ -15,6 +15,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -26,9 +27,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -133,6 +138,24 @@ public class Detail_liste extends AppCompatActivity implements NavigationView.On
 
     public void setLoadingFinished(boolean loadingFinished) {
         this.loadingFinished = loadingFinished;
+    }
+
+    public void cancelSMS(View view) {
+        showListItemFragment();
+    }
+
+    public void validateSMS(View view) {
+        EditText contenusms = (EditText) findViewById(R.id.contenusms);
+        AutoCompleteTextView numerosms = (AutoCompleteTextView) findViewById(R.id.mmWhoNo);
+        Log.d("SONPERE","j'ai choisi : "+numerosms.getText().toString());
+        String jason = numerosms.getText().toString().substring(numerosms.getText().toString().lastIndexOf('=')+1,(numerosms.getText().toString().length() -1));
+        Log.d("SONPERE", "j'envoie "+contenusms.getText().toString()+" au "+jason);
+        SmsManager.getDefault().sendTextMessage(jason, null, contenusms.getText().toString(), null, null);
+        Toast toast = Toast.makeText(this, "message envoyé", Toast.LENGTH_SHORT);
+        toast.show();
+        contenusms.setText("");
+        numerosms.setText("");
+        showListItemFragment();
     }
 
     // Since this is an object collection, use a FragmentStatePagerAdapter, and NOT a FragmentPagerAdapter.
