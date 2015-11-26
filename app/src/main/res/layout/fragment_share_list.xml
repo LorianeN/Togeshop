@@ -3,8 +3,50 @@
     android:layout_height="match_parent"
     tools:context="com.example.loriane.togeshop.ShareListFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Partager la liste nomListe"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="@color/colorAccent"
+            android:textSize="24dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Scrollview des personnes dispo à implémenter"/>
+        <ScrollView
+            android:id="@+id/listUsers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Liste des utilisateurs"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Retour"
+                android:textColor="#FFFFFF"
+                android:background="@color/colorPrimary"
+                android:onClick="cancelShare"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="valider"
+                android:textColor="#FFFFFF"
+                android:background="@color/colorPrimary"
+                android:onClick="validateSharet"/>
+        </LinearLayout>
+
+    </LinearLayout>
 
 </FrameLayout>

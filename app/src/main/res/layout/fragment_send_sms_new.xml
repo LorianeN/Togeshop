@@ -5,19 +5,51 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.loriane.togeshop.SendSmsNewFragment">
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Envoi de la liste par SMS "
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="@color/colorAccent"
+            android:textSize="24dp"/>
 
-<AutoCompleteTextView
+        <AutoCompleteTextView
+            android:id="@+id/mmWhoNo"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="To...."
+            >
 
-    android:id="@+id/mmWhoNo"
+        </AutoCompleteTextView>
 
-    android:layout_width="fill_parent"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Retour"
+                android:textColor="#FFFFFF"
+                android:background="@color/colorPrimary"
+                android:onClick="cancelSMS"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="valider"
+                android:textColor="#FFFFFF"
+                android:background="@color/colorPrimary"
+                android:onClick="validateSMS"/>
+        </LinearLayout>
 
-    android:layout_height="wrap_content"
-
-    android:hint="To...."
-
-    >
-
-</AutoCompleteTextView>
+    </LinearLayout>
 
 </LinearLayout>
+
