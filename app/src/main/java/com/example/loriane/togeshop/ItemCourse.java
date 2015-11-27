@@ -33,7 +33,7 @@ public class ItemCourse {
     Bitmap imageitem=null;
     Boolean disable =false;
     Boolean isTaken =false;
-    String chosen = "*";
+    String chosen = "";
 
     public ItemCourse() {
 

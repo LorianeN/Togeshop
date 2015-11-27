@@ -4,9 +4,15 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
@@ -17,6 +23,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.telephony.SmsManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -26,17 +33,31 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.loriane.togeshop.dummy.ItemsContent;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -45,6 +66,10 @@ public class Detail_liste extends AppCompatActivity implements NavigationView.On
     ItemsFragsPagerAdapter itemsFragsPagerAdapter;
     ViewPager mViewPager;
     public ProgressBar spinner;
+
+
+
+    public ProgressBar searchSpinner;
     Fragment[] ItemActionFragments = new Fragment[5];
 
 
@@ -68,6 +93,7 @@ public class Detail_liste extends AppCompatActivity implements NavigationView.On
         Log.d("SONPERE", "j'ai mon fragment item");
         setContentView(R.layout.activity_detail_liste);
         spinner = (ProgressBar)findViewById(R.id.progressBar1);
+        //searchSpinner = (ProgressBar)findViewById(R.id.progressBarSearch);
         Log.d("SONPERE", "j'ai mis la view en place");
         // ViewPager and its adapters use support library fragments, so use getSupportFragmentManager.
         itemsFragsPagerAdapter = new ItemsFragsPagerAdapter(getSupportFragmentManager());
@@ -120,6 +146,12 @@ public class Detail_liste extends AppCompatActivity implements NavigationView.On
     }
 
 
+    public ProgressBar getSpinner() {
+        return spinner;
+    }
+    public ProgressBar getSearchSpinner() {
+        return searchSpinner;
+    }
     @Override
     public void onFragmentInteraction(String msg) {
         //Log.d("SONPERE", "j'ai appuyé sur l'item "+ msg);
@@ -156,6 +188,36 @@ public class Detail_liste extends AppCompatActivity implements NavigationView.On
         contenusms.setText("");
         numerosms.setText("");
         showListItemFragment();
+    }
+
+    public void cancelShare(View view) {
+        showListItemFragment();
+    }
+
+    public void validateSharet(View view) {
+        Client.getClient().addUserToList(((AutoCompleteTextView) findViewById(R.id.shareWithWho)).getText().toString());
+    }
+
+    public void cancelNewItem(View view) {
+        showListItemFragment();
+    }
+
+    public void validateNewItem(View view) {
+        //TODO envoyer les items sélectionnés
+        ArrayList<ItemCourse> pouet = ((NewItemFragment) ItemActionFragments[1]).getResearchedItems();
+        Client.getClient().addItems(pouet);
+        showListItemFragment();
+        Toast toast = Toast.makeText(this, "items ajoutés", Toast.LENGTH_SHORT);
+        toast.show();
+    }
+
+    public void searchItems(View view) {
+        String recherche = ((EditText) findViewById(R.id.itemSearched)).getText().toString();
+        recherche = recherche.replace(" ","%20");
+
+        //searchSpinner.setVisibility(View.VISIBLE);
+        ArrayList<ItemCourse> pouet = getRequeteData(recherche);
+        ((NewItemFragment) ItemActionFragments[1]).refresh(pouet);
     }
 
     // Since this is an object collection, use a FragmentStatePagerAdapter, and NOT a FragmentPagerAdapter.
@@ -255,7 +317,12 @@ public class Detail_liste extends AppCompatActivity implements NavigationView.On
     }
 
     public void showShareListFragment(){
+        spinner.setVisibility(View.VISIBLE);
+        new getUserTask().execute();
         mViewPager.setCurrentItem(3);
+        ArrayAdapter<String> userAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line,Client.getClient().userList);
+        AutoCompleteTextView nuage = (AutoCompleteTextView) findViewById(R.id.shareWithWho);
+        nuage.setAdapter(userAdapter);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setVisibility(View.INVISIBLE);
     }
@@ -330,5 +397,60 @@ public class Detail_liste extends AppCompatActivity implements NavigationView.On
         }
         people.close();
         startManagingCursor(people);
+    }
+
+
+    public ArrayList<ItemCourse> getRequeteData(String nomItem) {
+        nomItem = nomItem.replace(" ","%20");
+        String requete = "https://www.mastercourses.com/api2/products/search/?q="+nomItem+"&scope=min&mct=hieCaig6Oth2thiem7eiRiechufooWix";
+        ArrayList<ItemCourse> result = new ArrayList<>();
+        try {
+            Client.getClient().execHTMLRequete(requete);
+        JSONArray reqResult = new JSONArray((Client.getClient().resultSearch).toString());
+        int max = 0;
+        if(reqResult.length()>10) max =10;
+        else max = reqResult.length();
+        for(int i =0;i< max;i++){
+            JSONObject pouet = null;
+                pouet = reqResult.getJSONObject(i);
+                ItemCourse repouet = new ItemCourse();
+                String nom = pouet.getString("name");
+                System.out.println(nom);
+                repouet.setNom(nom);
+                repouet.setChainId(pouet.getInt("chain_id"));
+                repouet.setIdItem(pouet.getInt("id"));
+                repouet.setTaken(false);
+                repouet.setPrix("0");
+                repouet.setURL(pouet.getString("image_url"));
+                result.add(repouet);
+        }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+
+    public class getUserTask extends AsyncTask<Void, Void, Boolean> {
+        getUserTask() {
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            Log.d("SONPERE", "je commence a récup les users");
+            Client.getClient().getUsers();
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            Log.d("SONPERE","done");
+            spinner.setVisibility(View.GONE);
+
+        }
+
+        @Override
+        protected void onCancelled() {
+        }
     }
 }

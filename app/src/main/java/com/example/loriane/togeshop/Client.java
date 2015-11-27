@@ -27,6 +27,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Created by Sandjiv on 22/11/2015.
@@ -39,6 +40,8 @@ public class Client {
     Socket sock;
     DataInputStream curIn ;
     DataOutputStream curOut ;
+    JSONArray resultSearch;
+    private boolean finished = false;
 
 
     public String getUserName() {
@@ -52,7 +55,7 @@ public class Client {
     String userName;
     private ListeCourse listeCourse;
     boolean connected = false ;
-
+    ArrayList<String> userList = new ArrayList<>();
 
     int idCurrentList=1;
     String nameCurrentList ="";
@@ -282,13 +285,14 @@ public class Client {
     }
 
 
-    public JSONArray execRequete(String requete) {
-        try {
-            return new JSONArray(getHTML(requete));
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void execHTMLRequete(String requete) {
+
+        new execHTMLRequeteTask(requete).execute();
+        while(!finished){
+            Log.d("SAMERE","j'attend");
         }
-        return null;
+        finished = false;
+
     }
 
     public String execStringRequete(String requete) {
@@ -327,7 +331,7 @@ public class Client {
     }
 
     public boolean sendRequest(String requete) {
-        updateItemTask nuage = new updateItemTask(requete);
+        execRequeteTask nuage = new execRequeteTask(requete);
         nuage.execute();
         return true;
     }
@@ -360,9 +364,101 @@ public class Client {
     }
 
 
-    public class updateItemTask extends AsyncTask<Void, Void, Boolean> {
+    public void getUsers(){
+
+        try {
+            curOut.writeUTF("getUsers/0/0");
+            JSONArray jonarray = new JSONArray(curIn.readUTF());
+            for (int i=0;i<jonarray.length();i++){
+                if(jonarray.getJSONObject(i).getString("login").equals("")||jonarray.getJSONObject(i).getString("login").equals(getUserName())||jonarray.getJSONObject(i).getString("login").equals("pouet")){
+
+                }else{
+                    userList.add(jonarray.getJSONObject(i).getString("login"));
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addUserToList(String username) {
+        String requete = "addUsertoList/"+username+"/"+getIdCurrentList();
+        new execRequeteTask(requete).execute();
+    }
+
+    public void addItems(ArrayList<ItemCourse> pouet) {
+        new addItemTask(pouet).execute();
+    }
+
+    public class execHTMLRequeteTask extends AsyncTask<Void, Void, Boolean> {
         String text;
-        updateItemTask(String jason) {
+        execHTMLRequeteTask(String jason) {
+            text =jason;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            try {
+                resultSearch = new JSONArray(getHTML(text));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            finished = true;
+            return true;
+        }
+    }
+
+    public class addItemTask extends AsyncTask<Void, Void, Boolean> {
+        ArrayList<ItemCourse> text=null;
+        addItemTask(ArrayList<ItemCourse> jason) {
+            text =jason;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            for (int i= 0; i<text.size();i++){
+                ItemCourse res = new ItemCourse(text.get(i));
+                JSONObject tmp = new JSONObject();
+                if(res.getTaken()) {
+                    try {
+                        tmp.put("idItem", res.getIdItem());
+                        tmp.put("nom", res.getNom());
+                        tmp.put("taken", false);
+                        tmp.put("disable", false);
+                        tmp.put("prix", res.getPrix());
+                        tmp.put("chosen_by", "");
+                        tmp.put("disable", res.getDisable());
+                        tmp.put("chain_id", res.getChainId());
+                        if (res.getURL().equals(null)) {
+                            tmp.put("url", "http://www.vernon-encheres.fr/_images/banniere_404.jpg");
+                        } else {
+                            tmp.put("url", res.getURL());
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    String requete = "addItem/" + Client.getClient().getIdCurrentList() + "/" + tmp.toString();
+                    System.out.println("j'écris : " + requete);
+                    try {
+                        curOut.writeUTF(requete);
+                        System.out.println("done, j'attend des retours éventuels");
+                        curIn.readBoolean();
+                        System.out.println("done");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return true;
+        }
+    }
+
+    public class execRequeteTask extends AsyncTask<Void, Void, Boolean> {
+        String text;
+        execRequeteTask(String jason) {
             text =jason;
         }
 
@@ -377,18 +473,7 @@ public class Client {
             }
             return true;
         }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            if(success){
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-        }
     }
-
 
     public class addListTask extends AsyncTask<Void, Void, Boolean> {
 String text;
@@ -417,10 +502,6 @@ String text;
             if(success){
                 ((ListeFragment)ChoixListe.principalFragment[0]).refresh();
             }
-        }
-
-        @Override
-        protected void onCancelled() {
         }
     }
 }

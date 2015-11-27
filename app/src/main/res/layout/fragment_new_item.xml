@@ -6,7 +6,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:weightSum="1">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -19,14 +20,14 @@
         <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <EditText android:id="@+id/nomListe" android:layout_width="match_parent"
+            <EditText android:id="@+id/itemSearched" android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:hint="Nom du produit recherché"
                 android:inputType="text" android:maxLines="1"
                 android:singleLine="true" />
         </android.support.design.widget.TextInputLayout>
 
         <Button
-            android:id="@+id/tf_date"
+            android:id="@+id/searchProductButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Chercher ce type de produits"
@@ -34,25 +35,19 @@
             android:background="@color/colorPrimary"
             android:onClick="searchItems"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Scrollview à implémenter" />
+                <ListView android:id="@+id/liste_searched_items" android:layout_width="match_parent"
+                    android:layout_height="295dp"
+                    android:longClickable="false"
+                    android:smoothScrollbar="true"
+                    android:scrollingCache="true"
+                    android:layout_weight="1.03" />
 
-        <ScrollView
-            android:id="@+id/resultSearch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Affichage résultat"
-            android:textStyle="bold"
-            android:textAlignment="center"
-            android:textColor="@color/colorAccent"
-            android:textSize="24dp"/>
 
 
         <LinearLayout
+            android:gravity="bottom"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="71dp"
             android:orientation="horizontal">
             <Button
                 android:layout_width="wrap_content"
@@ -62,9 +57,10 @@
                 android:background="@color/colorPrimary"
                 android:onClick="cancelNewItem"/>
             <Button
+                android:id="@+id/ysapellepas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:visibility="invisible"
                 android:text="valider"
                 android:textColor="#FFFFFF"
                 android:background="@color/colorPrimary"

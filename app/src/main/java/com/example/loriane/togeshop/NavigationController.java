@@ -56,37 +56,6 @@ public class NavigationController{
         return retour;
     }
 
-    public ArrayList<ItemCourse> getRequeteData(String nomItem) {
-        nomItem = nomItem.replace(" ","%20");
-        String requete = "https://www.mastercourses.com/api2/products/search/?q="+nomItem+"&scope=min&mct=hieCaig6Oth2thiem7eiRiechufooWix";
-        ArrayList<ItemCourse> result = new ArrayList<>();
-        JSONArray reqResult = Client.getClient().execRequete(requete);
-        int max = 0;
-        if(reqResult.length()>10) max =10;
-        else max = reqResult.length();
-        for(int i =0;i< max;i++){
-            JSONObject pouet = null;
-            try {
-                pouet = reqResult.getJSONObject(i);
-                ItemCourse repouet = new ItemCourse();
-                String nom = pouet.getString("name");
-                System.out.println(nom);
-                repouet.setNom(nom);
-                repouet.setChainId(pouet.getInt("chain_id"));
-                repouet.setIdItem(pouet.getInt("id"));
-                repouet.setTaken(false);
-                repouet.setPrix("0");
-                repouet.setURL(pouet.getString("image_url"));
-                result.add(repouet);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-
-        }
-        return result;
-    }
-
     public boolean getSelectedSearchItem(ArrayList<ItemCourse> pouet) {
         ArrayList<ItemCourse> demande = new ArrayList<>();
         for (int i =0; i< pouet.size();i++){
@@ -177,16 +146,16 @@ public class NavigationController{
 
     }
 
-    public String execRequeteChaineLoc(Integer integer,double lat,double longi) {
-        String requete = "https://www.mastercourses.com/api2/chains/"+integer+"/stores/locator/?lat="+lat+"&lon="+longi+"&scope=min&mct=hieCaig6Oth2thiem7eiRiechufooWix";
-        JSONArray resul = Client.getClient().execRequete(requete);
-        String ret =null;
-        try {
-            System.out.println("le plus proche se trouve au "+resul.getJSONObject(0).toString());
-            ret = resul.getJSONObject(0).toString();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return ret;
-    }
+//    public String execRequeteChaineLoc(Integer integer,double lat,double longi) {
+//        String requete = "https://www.mastercourses.com/api2/chains/"+integer+"/stores/locator/?lat="+lat+"&lon="+longi+"&scope=min&mct=hieCaig6Oth2thiem7eiRiechufooWix";
+//        JSONArray resul = Client.getClient().execRequete(requete);
+//        String ret =null;
+//        try {
+//            System.out.println("le plus proche se trouve au "+resul.getJSONObject(0).toString());
+//            ret = resul.getJSONObject(0).toString();
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        return ret;
+//    }
 }

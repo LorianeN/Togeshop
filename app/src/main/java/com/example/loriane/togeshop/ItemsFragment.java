@@ -158,6 +158,10 @@ public class ItemsFragment extends Fragment implements ListView.OnItemClickListe
         }
     }
 
+    public void refresh(){
+        pouet.spinner.setVisibility(View.VISIBLE);
+        new GetItemsTask().execute();
+    }
     public Bitmap overlay(Bitmap bmp1, Bitmap bmp2) {
         Bitmap bmOverlay = Bitmap.createBitmap(bmp2.getWidth(), bmp2.getHeight(), bmp1.getConfig());
         float left =(bmp2.getWidth() - (bmp1.getWidth()*((float)bmp2.getHeight()/(float)bmp1.getHeight())))/(float)2.0;

@@ -16,10 +16,16 @@
             android:textColor="@color/colorAccent"
             android:textSize="24dp"/>
 
-        <TextView
-            android:layout_width="match_parent"
+
+        <AutoCompleteTextView
+            android:id="@+id/shareWithWho"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Scrollview des personnes dispo à implémenter"/>
+            android:hint="share with ..."
+            >
+
+        </AutoCompleteTextView>
+
         <ScrollView
             android:id="@+id/listUsers"
             android:layout_width="match_parent"
