@@ -40,7 +40,7 @@ public class Client {
     Socket sock;
     DataInputStream curIn ;
     DataOutputStream curOut ;
-    JSONArray resultSearch;
+    String resultSearch;
     private boolean finished = false;
 
 
@@ -310,16 +310,24 @@ public class Client {
 
 
     public static String getHTML(String urlToRead) throws Exception {
+        Log.d("SONPERE","on est parti");
         StringBuilder result = new StringBuilder();
+        Log.d("SONPERE","j'ai créé StringBuilder");
         URL url = new URL(urlToRead);
+        Log.d("SONPERE","j'ai créé l'URL");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        Log.d("SONPERE","connection ouverte");
         conn.setRequestMethod("GET");
         BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        Log.d("SONPERE","connection ouverte");
         String line;
         while ((line = rd.readLine()) != null) {
+            Log.d("SONPERE","j'écris");
             result.append(line);
         }
+        Log.d("SONPERE","j'ai fini d'écrire");
         rd.close();
+
         return result.toString();
     }
 
@@ -406,7 +414,7 @@ public class Client {
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
-                resultSearch = new JSONArray(getHTML(text));
+                resultSearch = getHTML(text);
             } catch (Exception e) {
                 e.printStackTrace();
             }

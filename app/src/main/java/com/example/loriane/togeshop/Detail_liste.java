@@ -112,7 +112,7 @@ public class Detail_liste extends AppCompatActivity implements NavigationView.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String uri = String.format(Locale.FRENCH, "http://maps.google.com/maps?daddr=%s","879 avenue de mimet");
+                String uri = String.format(Locale.FRENCH, "http://maps.google.com/maps?daddr=%s","chemin de la plaine marseille");
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                 intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
                 try
@@ -207,6 +207,7 @@ public class Detail_liste extends AppCompatActivity implements NavigationView.On
         ArrayList<ItemCourse> pouet = ((NewItemFragment) ItemActionFragments[1]).getResearchedItems();
         Client.getClient().addItems(pouet);
         showListItemFragment();
+        ((ItemsFragment) ItemActionFragments[0]).refresh();
         Toast toast = Toast.makeText(this, "items ajoutés", Toast.LENGTH_SHORT);
         toast.show();
     }
@@ -314,6 +315,10 @@ public class Detail_liste extends AppCompatActivity implements NavigationView.On
         mViewPager.setCurrentItem(2);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setVisibility(View.VISIBLE);
+//        Intent intent = new Intent(Detail_liste.this,
+//                info.class);
+//        intent.putExtra("nom",Client.getClient().getNameCurrentList());
+//        startActivity(intent);
     }
 
     public void showShareListFragment(){
@@ -406,7 +411,7 @@ public class Detail_liste extends AppCompatActivity implements NavigationView.On
         ArrayList<ItemCourse> result = new ArrayList<>();
         try {
             Client.getClient().execHTMLRequete(requete);
-        JSONArray reqResult = new JSONArray((Client.getClient().resultSearch).toString());
+        JSONArray reqResult = new JSONArray((Client.getClient().resultSearch));
         int max = 0;
         if(reqResult.length()>10) max =10;
         else max = reqResult.length();

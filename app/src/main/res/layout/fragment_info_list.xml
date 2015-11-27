@@ -1,6 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="com.example.loriane.togeshop.InfoListFragment">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -8,20 +9,20 @@
         android:orientation="vertical"
         android:weightSum="1">
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:id="@+id/onvalechercher"
             android:text="Informations sur la liste nomListe"
             android:textStyle="bold"
             android:textAlignment="center"
             android:textColor="@color/colorAccent"
             android:textSize="24dp"/>
 
-        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+
+        <fragment
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:id="@+id/map"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.56" />
-            <!--tools:layout="@layout/fragment_map"-->
-
+            android:layout_height="263dp"
+            android:layout_weight="0.16" />
 
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
             android:text="Date prévue du repas si envoyée"
