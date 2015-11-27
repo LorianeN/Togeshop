@@ -41,17 +41,25 @@ public class ListesContent {
      * A dummy item representing a piece of content.
      */
     public static class DummyItem {
+        public String nom;
         public int id;
-        public String content;
+        public String date;
+        public String adresse;
+        public String description;
 
-        public DummyItem(int id, String content) {
+
+
+        public DummyItem(int id, String nom, String date, String adresse, String description) {
             this.id = id;
-            this.content = content;
+            this.nom = nom;
+            this.date = date;
+            this.adresse = adresse;
+            this.description = description;
         }
 
         @Override
         public String toString() {
-            return content;
+            return nom;
         }
     }
 }

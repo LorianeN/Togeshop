@@ -131,7 +131,7 @@ public class ListeFragment extends Fragment implements AbsListView.OnItemClickLi
             // fragment is attached to one) that an item has been selected.
             //parent.getChildAt(position).setBackgroundColor(Color.BLUE);
             Client.getClient().setIdCurrentList(ListesContent.ITEMS.get(position).id);
-            Client.getClient().setNameCurrentList(ListesContent.ITEMS.get(position).content);
+            Client.getClient().setNameCurrentList(ListesContent.ITEMS.get(position).nom);
             mListener.onFragmentInteraction(String.valueOf(ListesContent.ITEMS.get(position).id));
         }
     }
@@ -156,13 +156,15 @@ public class ListeFragment extends Fragment implements AbsListView.OnItemClickLi
         @Override
         protected Boolean doInBackground(Void... params) {
             NavigationController roger = new NavigationController();
+Log.d("SONPERE","j'ai cree navigation controller");
 
             jean = roger.getListe();
+            Log.d("SONPERE","j'ai la liste");
             ListesContent.ITEMS.clear();
             ListesContent.ITEM_MAP.clear();
             for (int i =0;i<jean.size();i++){
-                Log.d("SONPERE", "j'ai reçu "+ jean.get(i).getNom());
-                ListesContent.addItem(new ListesContent.DummyItem(jean.get(i).getIdListe(), jean.get(i).getNom()));
+                Log.d("SONPERE", "j'ai reçu "+ jean.get(i).toString());
+                ListesContent.addItem(new ListesContent.DummyItem(jean.get(i).getIdListe(), jean.get(i).getNom(), jean.get(i).getDate(), jean.get(i).getLieu(), jean.get(i).getDescription()));
             }
             pouet.setLoadingFinished(true);
             return true;

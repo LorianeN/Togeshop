@@ -5,7 +5,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:weightSum="1">
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
             android:text="Informations sur la liste nomListe"
             android:textStyle="bold"
@@ -13,19 +14,24 @@
             android:textColor="@color/colorAccent"
             android:textSize="24dp"/>
 
-        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:text="Map à implémenter"
-        android:textStyle="normal"
-        android:textAlignment="center"/>
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.56" />
+            <!--tools:layout="@layout/fragment_map"-->
 
 
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
             android:text="Date prévue du repas si envoyée"
+            android:id="@+id/dateRepas"
             android:textStyle="normal"
             android:textAlignment="center"/>
 
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
             android:text="Description de la liste"
+            android:id="@+id/descriptionRepas"
             android:textStyle="normal"
             android:textAlignment="center"/>
 
