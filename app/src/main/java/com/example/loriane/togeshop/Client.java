@@ -53,7 +53,7 @@ public class Client {
     }
 
     String userName;
-    private ListeCourse listeCourse;
+    private ListeCourse currentListeCourse;
     boolean connected = false ;
     ArrayList<String> userList = new ArrayList<>();
 
@@ -272,6 +272,10 @@ public class Client {
 
         System.out.println("je récupère mes listes");
         try {
+            if(curOut.equals(null)){
+                Log.d("SONPERE","yaunblem");
+            }
+            Log.d("SONPERE",curOut.toString());
             curOut.writeUTF("getGlobalListe/1/");
 
             String pouet = curIn.readUTF();
